@@ -54,7 +54,7 @@ class SessionPreset(str, Enum):
 class SessionStatus(str, Enum):
     completed = "completed"
     abandoned = "abandoned"
-    active = "active"
+    in_progress = "in_progress"
 
 class Session(Base):
     __tablename__ = "sessions"
