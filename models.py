@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum
 import uuid
 from datetime import UTC, datetime
@@ -62,10 +63,10 @@ class Session(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     session_planned_seconds: Mapped[int] = mapped_column(Integer, nullable=False, default=7200)
     mode: Mapped[SessionPreset] = mapped_column(SAEnum(SessionPreset), default=SessionPreset.normal)
-    status: Mapped[SessionStatus | None] = mapped_column(
+    status: Mapped[SessionStatus] = mapped_column(
         SAEnum(SessionStatus),
         nullable=True,
-        default=SessionStatus.active
+        default=SessionStatus.in_progress
     )
     started_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
     ended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))

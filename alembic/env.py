@@ -85,7 +85,14 @@ async def run_async_migrations() -> None:
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
 
-    asyncio.run(run_async_migrations())
+    import selectors
+    asyncio.set_event_loop_policy(asyncio.DefaultEventLoopPolicy())
+    loop = asyncio.SelectorEventLoop(selectors.SelectSelector())
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(run_async_migrations())
+    finally:
+        loop.close()
 
 
 if context.is_offline_mode():
