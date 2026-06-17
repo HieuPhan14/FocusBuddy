@@ -80,8 +80,8 @@ class SessionBase(BaseModel):
         return v
     
     mode: SessionPreset
-    cycle_focus_seconds: int | None = Field(default=None, gt=600, le=10800)
-    cycle_break_seconds: int | None = Field(default=None, gt=60, le=3600)
+    cycle_focus_seconds: int | None = Field(default=None, ge=600, le=10800)
+    cycle_break_seconds: int | None = Field(default=None, ge=60, le=3600)
 
     @model_validator(mode="after")
     def validate_custom_session(self) -> Self:
@@ -101,6 +101,7 @@ class SessionResponse(SessionBase):
     started_at: datetime
     ended_at: datetime | None
     owner: UserPublic
+    schedule: list[tuple[int, int]] = []
 
 class PaginatedSessionResponse(BaseModel):
     sessions: list[SessionResponse]

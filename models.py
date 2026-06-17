@@ -62,7 +62,7 @@ class Session(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
     session_planned_seconds: Mapped[int] = mapped_column(Integer, nullable=False, default=7200)
-    mode: Mapped[SessionPreset] = mapped_column(SAEnum(SessionPreset), default=SessionPreset.normal)
+    mode: Mapped[SessionPreset] = mapped_column(SAEnum(SessionPreset), default=SessionPreset.light)
     status: Mapped[SessionStatus] = mapped_column(
         SAEnum(SessionStatus),
         nullable=True,

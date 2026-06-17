@@ -30,7 +30,8 @@ async def send_password_reset_email(
     token: str
 ) -> None:
     reset_url = f"{settings.frontend_url}/reset-password?token={token}"
-    plain_text = f"""Hi {username},
+    plain_text = f"""
+Hi {username},
 
 Click the link below to set a new password:
 

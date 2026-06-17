@@ -17,7 +17,7 @@ async def lifespan(_app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
-app.include_router(users.router, prefix="/api/sessions", tags=["sessions"])
+app.include_router(sessions.router, prefix="/api/sessions", tags=["sessions"])
 
 @app.get("/health")
 async def health_check(
