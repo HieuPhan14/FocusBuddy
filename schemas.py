@@ -70,7 +70,7 @@ class ChangePasswordRequest(BaseModel):
         return validate_password_strength(v)
 
 class SessionBase(BaseModel):
-    session_planned_seconds: int = Field(gt=0)
+    session_planned_seconds: int = Field(ge=600)
 
     @field_validator("session_planned_seconds")
     @classmethod
