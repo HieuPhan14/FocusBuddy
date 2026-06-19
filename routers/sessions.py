@@ -1,3 +1,4 @@
+from datetime import UTC, datetime
 from typing import Annotated
 import uuid
 
@@ -10,7 +11,7 @@ from models import Session, SessionPreset
 from auth import CurrentUser
 from config import settings
 from database import get_db
-from schemas import SessionCreate, SessionResponse, PaginatedSessionResponse
+from schemas import SessionCreate, SessionResponse, PaginatedSessionResponse, SessionUpdate
 
 router = APIRouter()
 
@@ -166,6 +167,37 @@ async def get_session(
     )
 
 
+@router.patch("/{session_id}", response_model=SessionResponse)
+async def update_session_status(
+    db: Annotated[AsyncSession, Depends(get_db)],
+    session_id: uuid.UUID,
+    current_user: CurrentUser,
+    status_update: SessionUpdate
+):
+    result = await db.execute(
+        select(Session).
+        where(Session.id == session_id)
+    )
+    session = result.scalars().first()
+
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Session not found"
+        )
+    
+    if session.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to update this session"
+        )
+    
+    session.status = status_update.status
+    session.ended_at = datetime.now(UTC)
+
+    await db.commit()
+    await db.refresh(session, attribute_names=["owner"])
+    return session
 
 
 @router.delete("/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -194,4 +226,7 @@ async def delete_session(
     
     await db.delete(session)
     await db.commit()
+
+
+
 

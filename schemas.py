@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Self
+from typing import Literal, Self
 import uuid
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 import re
@@ -112,3 +112,5 @@ class PaginatedSessionResponse(BaseModel):
     limit: int
     has_more: bool
 
+class SessionUpdate(BaseModel):
+    status: Literal[SessionStatus.completed, SessionStatus.abandoned]
