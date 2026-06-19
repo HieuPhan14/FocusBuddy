@@ -7,6 +7,7 @@ requires-python = ">=3.13"
 dependencies = [
     "aiosmtplib>=5.1.1",
     "alembic>=1.18.4",
+    "boto3>=1.43.33",
     "fastapi[standard]>=0.136.3",
     "pillow>=12.2.0",
     "psycopg[binary]>=3.3.4",

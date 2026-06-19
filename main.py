@@ -2,6 +2,7 @@ from typing import Annotated
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,6 +16,8 @@ async def lifespan(_app: FastAPI):
     await engine.dispose()
 
 app = FastAPI(lifespan=lifespan)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(sessions.router, prefix="/api/sessions", tags=["sessions"])
