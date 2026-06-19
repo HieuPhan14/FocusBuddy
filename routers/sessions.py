@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Annotated
 import uuid
 
@@ -7,11 +7,11 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from models import Session, SessionPreset
+from models import Session, SessionPreset, SessionStatus
 from auth import CurrentUser
 from config import settings
 from database import get_db
-from schemas import SessionCreate, SessionResponse, PaginatedSessionResponse, SessionUpdate
+from schemas import SessionCreate, SessionResponse, PaginatedSessionResponse, SessionUpdate, StatResponse
 
 router = APIRouter()
 
@@ -143,6 +143,49 @@ async def get_sessions(
     )
 
 
+@router.get("/stats", response_model=StatResponse)
+async def get_user_stats(
+    db:  Annotated[AsyncSession, Depends(get_db)],
+    current_user: CurrentUser,
+):
+    result = await db.execute(
+        select(Session).
+        where(Session.user_id == current_user.id).
+        order_by(Session.started_at.desc())
+    )
+    sessions = result.scalars().all()
+
+    if not sessions:
+        return StatResponse()
+
+    last_session_date = sessions[0].started_at
+    total_focus_time = 0
+    number_of_completed_sessions = 0
+    current_streak = 1
+    longest_streak = current_streak
+
+    for i, session in enumerate(sessions):
+        if i >= 1 and (sessions[i-1].started_at.date() - sessions[i].started_at.date() == timedelta(days=1)):
+            current_streak += 1
+        else:
+            longest_streak = max(current_streak, longest_streak)
+            current_streak = 1
+
+        if session.status == SessionStatus.completed:
+            number_of_completed_sessions += 1
+            total_focus_time += session.session_planned_seconds
+
+        elif session.status == SessionStatus.abandoned:
+            total_focus_time += (session.ended_at - session.started_at).total_seconds()
+
+    return StatResponse(
+        total_focus_time = round(total_focus_time / 3600, 1),
+        number_of_completed_sessions = number_of_completed_sessions,
+        last_session_date = last_session_date,
+        longest_streak= max(current_streak, longest_streak)
+    )
+
+    
 @router.get("/{session_id}", response_model=SessionResponse)
 async def get_session(
     current_user: CurrentUser,

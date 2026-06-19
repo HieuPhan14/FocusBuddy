@@ -114,3 +114,9 @@ class PaginatedSessionResponse(BaseModel):
 
 class SessionUpdate(BaseModel):
     status: Literal[SessionStatus.completed, SessionStatus.abandoned]
+
+class StatResponse(BaseModel):
+    total_focus_time: float = 0
+    number_of_completed_sessions: int = 0
+    last_session_date: datetime | None = None
+    longest_streak: int = 0
