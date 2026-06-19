@@ -1,11 +1,12 @@
 from typing import Annotated
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from models import User, Session, SessionPreset, SessionStatus
+from models import Session, SessionPreset
 from auth import CurrentUser
 from config import settings
 from database import get_db
@@ -105,4 +106,92 @@ async def create_session(
     response = SessionResponse.model_validate(new_session)
     return response.model_copy(update={"schedule": session_info["schedule"]})
 
+@router.get("", response_model=PaginatedSessionResponse)
+async def get_sessions(
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    skip: Annotated[int, Query(ge=0)] = 0,
+    limit: Annotated[int, Query(ge=1, le=100)] = settings.sessions_per_page
+):
+    
+    count_result = await db.execute(
+        select(func.count()).
+        select_from(Session).
+        where(Session.user_id == current_user.id)
+    )
+    total = count_result.scalar() or 0
+
+    result = await db.execute(
+        select(Session).
+        options(selectinload(Session.owner)).
+        where(Session.user_id == current_user.id).
+        order_by(Session.started_at.desc()).
+        offset(skip).
+        limit(limit)
+    )
+    sessions = result.scalars().all()
+
+    has_more = skip + len(sessions) < total
+
+    return PaginatedSessionResponse(
+        sessions=[SessionResponse.model_validate(session) for session in sessions],
+        total=total,
+        skip=skip,
+        limit=limit,
+        has_more=has_more
+    )
+
+
+@router.get("/{session_id}", response_model=SessionResponse)
+async def get_session(
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    session_id: uuid.UUID
+):
+    result = await db.execute(
+        select(Session).
+        options(selectinload(Session.owner)).
+        where(Session.user_id == current_user.id, Session.id == session_id)
+    )
+    session = result.scalars().first()
+
+    if session:
+        session_info = generate_schedule(session)
+        response = SessionResponse.model_validate(session)
+        return response.model_copy(update={"schedule": session_info["schedule"]})
+    
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Session not found"
+    )
+
+
+
+
+@router.delete("/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_session(
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+    session_id: uuid.UUID
+):
+    result = await db.execute(
+        select(Session).
+        where(Session.id == session_id)
+    )
+    session = result.scalars().first()
+
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Session not found"
+        )
+
+    if session.user_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not authorized to delete this session"
+        )
+    
+    await db.delete(session)
+    await db.commit()
 
