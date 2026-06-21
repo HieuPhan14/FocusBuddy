@@ -84,6 +84,7 @@ def generate_schedule(session: SessionCreate) -> dict:
         "cycle_break_seconds": cycle_break_seconds
     }
 
+
 @router.post("", response_model=SessionResponse, status_code=status.HTTP_201_CREATED)
 async def create_session(
     session: SessionCreate,
@@ -106,6 +107,14 @@ async def create_session(
 
     response = SessionResponse.model_validate(new_session)
     return response.model_copy(update={"schedule": session_info["schedule"]})
+
+
+@router.post("/schedule", status_code=status.HTTP_200_OK)
+async def create_session_no_auth(
+    session: SessionCreate
+):
+    return generate_schedule(session)
+        
 
 @router.get("", response_model=PaginatedSessionResponse)
 async def get_sessions(
