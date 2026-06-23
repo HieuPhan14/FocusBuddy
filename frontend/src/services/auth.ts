@@ -1,23 +1,40 @@
 import api from "./api"
 
-interface Token {
+export interface Token {
     access_token: string
     token_type: string
 }
 
-interface LoginCredentials {
+export interface LoginCredentials {
     username: string
     password: string
 }
+
+export interface UserPrivate {
+    id: string
+    username: string
+    email: string
+    image_file: string | null
+    image_path: string
+}
+    // VITE_API_URL=http://127.0.0.1:8000shou
 
 const getToken = async (form: LoginCredentials): Promise<Token> => {
     const params = new URLSearchParams({username: form.username, password: form.password})
 
     const response = await api.post<Token>(
-        "/users/token",
+        "/api/users/token",
         params
     )
     return response.data
 }
 
-export default getToken;
+const getUser = async (token: string): Promise<UserPrivate> => {
+    const response = await api.get<UserPrivate>(
+        "/api/users/me",
+        {headers: {Authorization: `Bearer ${token}`}}
+    )
+    return response.data
+}
+
+export { getToken, getUser }
