@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect } from 'react'
 import { getUser, getToken } from "../services/auth"
 import type { LoginCredentials, UserPrivate } from "../services/auth"
-import { AxiosError } from 'axios'
+import getErrorMessage from '../utils/errorUtils'
 
 interface AuthProviderProps {
     children: React.ReactNode
@@ -15,16 +15,6 @@ interface AuthContextType {
     isAuthenticated: boolean
     isLoading: boolean
     error: string | null
-}
-
-const getErrorMessage = (error: unknown): string => {
-    if (error instanceof AxiosError) {
-        return error.response?.data?.detail ?? "Something went wrong"
-    } else if (error instanceof Error) {
-        return error.message
-    } else {
-        return "Something went wrong"
-    }
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

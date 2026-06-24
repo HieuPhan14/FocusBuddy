@@ -3,6 +3,7 @@ import StatPage from "./pages/StatPage";
 import TimerPage from "./pages/TimerPage";
 import ProfilePage from "./pages/ProfilePage";
 import AuthProvider from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
     return (
@@ -10,8 +11,8 @@ export default function App() {
             <AuthProvider>
                 <Routes>
                     <Route path="/" element={<TimerPage />}/>
-                    <Route path="/stats" element={<StatPage />}/>
-                    <Route path="/profile" element={<ProfilePage />}/>
+                    <Route path="/stats" element={<ProtectedRoute><StatPage /></ProtectedRoute>}/>
+                    <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

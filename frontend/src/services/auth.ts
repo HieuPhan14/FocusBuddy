@@ -17,7 +17,6 @@ export interface UserPrivate {
     image_file: string | null
     image_path: string
 }
-    // VITE_API_URL=http://127.0.0.1:8000shou
 
 const getToken = async (form: LoginCredentials): Promise<Token> => {
     const params = new URLSearchParams({username: form.username, password: form.password})
