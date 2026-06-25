@@ -48,7 +48,7 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
             >
                 <div className="">
                     <label htmlFor="session_length" className="">
-                        Session Length
+                        Session Length 
                     </label>
                     <input 
                         id="session_length"

@@ -1,7 +1,9 @@
 import type { SessionResponse } from "../types/session";
 import { useEffect, useRef, useState } from "react";
-import handlePhase from "../lib/timer";
+import {handlePhase, formatTime} from "../lib/timer";
 import type { PhaseInfo } from "../lib/timer";
+import React from "react";
+import clsx from "clsx"
 
 interface TimerProps {
     session: SessionResponse
@@ -71,14 +73,14 @@ const Timer = ( {session}: TimerProps ) => {
                         <div className="border border-brown-400">
                             <div>Time remaining</div>
                             <div>
-                                <div>{displayInfo.timeLeftInPhase}</div>
+                                <div>{formatTime(Math.floor(displayInfo.timeLeftInPhase))}</div>
                                 <div>Current cycle index {displayInfo.currentCycleIndex}</div>
                             </div>
                         </div>
 
                         <div className="border border-brown-400">
                             <div>Total focus</div>
-                            <div>{displayInfo.focusAccumulated}</div>
+                            <div>{formatTime(Math.floor(displayInfo.focusAccumulated))}</div>
                         </div>
 
                         <div className="border border-brown-400">
@@ -90,7 +92,18 @@ const Timer = ( {session}: TimerProps ) => {
 
                     <div className="border border-red-400">
                         <div>Current phase</div>
-                        <div>{displayInfo.phase}</div>
+                        {session.schedule.map((cycle, i) => (
+                            <React.Fragment key={i}>
+                                {cycle[0] != 0 && 
+                                    <div className={clsx(`Focus ${i+1}` === displayInfo.phase && "text-red-400")}>
+                                        {`Focus ${i+1}`} 
+                                    </div>}
+                                {cycle[1] != 0 && 
+                                    <div className={clsx(`Break ${i+1}` === displayInfo.phase && "text-red-400")}> 
+                                        {`Break ${i+1}`} 
+                                    </div>}
+                            </React.Fragment>
+                        ))}
                     </div>
                 </div>
                 }

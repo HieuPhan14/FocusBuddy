@@ -10,6 +10,8 @@ from database import engine, get_db
 from routers import users, sessions
 from config import settings
 
+from fastapi.middleware.cors import CORSMiddleware
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     yield
@@ -19,8 +21,18 @@ app = FastAPI(lifespan=lifespan)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+origins = ["http://localhost:5173"]
+
+app.add_middleware(
+  CORSMiddleware,
+  allow_origins = origins,
+  allow_credentials=True,
+  allow_methods = ["*"],
+  allow_headers = ["*"]
+)
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(sessions.router, prefix="/api/sessions", tags=["sessions"])
+
 
 @app.get("/health")
 async def health_check(
