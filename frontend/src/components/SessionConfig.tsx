@@ -12,17 +12,51 @@ interface SessionStartProps {
 const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
     const [sessionLength, setSessionLength] = useState<string>("3600")
     const [mode, setMode] = useState<SessionMode>("light")
-    const [cycleFocusTime, setCycleFocusTime] = useState<number>(0)
-    const [cycleBreakTime, setCycleBreakTime] = useState<number>(0)
+    const [cycleFocusTime, setCycleFocusTime] = useState<string>("")
+    const [cycleBreakTime, setCycleBreakTime] = useState<string>("")
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null);
     const [customSessionHour, setcustomSessionHour] = useState<string>("")
     const [customSessionMinute, setcustomSessionMinute] = useState<string>("")
     const [selectedOption, setSelectedOption] = useState<string>("3600")
     
+    const sessionValidation = (sessionLength: number): boolean => {
+        if (sessionLength === 0){
+            setError("Please enter at least hours or minutes for your session length.")
+            return false
+        }
+        if (sessionLength < 600){
+            setError("Please enter a session with at least 10 minutes length.")
+            return false
+        }
+        if (sessionLength > 36000){
+            setError("Sessions are capped at 10 hours to align with healthy focus limits.")
+            return false
+        }
+        return true
+    }
+
+    const customValidation = (cycle_focus_seconds: number, cycle_break_seconds:number): boolean => {
+        if (cycle_focus_seconds < 600 || cycle_focus_seconds > 10800){
+            setError("Please enter valid focus duration (10-180 mins).")
+            return false
+        }
+        if (cycle_break_seconds < 60 || cycle_break_seconds > 3600){
+            setError("Please enter valid break duration (1-60 mins).")
+            return false
+        }
+        return true
+    }
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
+
+        if (!sessionValidation(Number(sessionLength))) 
+            return
+
+        if (mode === "custom" && !customValidation(Number(cycleFocusTime)*60, Number(cycleBreakTime)*60))
+            return
+
         try{
             setIsLoading(true)
             const response = await api.post<SessionResponse>(
@@ -30,8 +64,8 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                 {
                     session_planned_seconds: Number(sessionLength),
                     mode: mode,
-                    cycle_focus_seconds: mode === "custom" ? cycleFocusTime : null,
-                    cycle_break_seconds: mode === "custom" ? cycleBreakTime : null
+                    cycle_focus_seconds: mode === "custom" ? Number(cycleFocusTime)*60 : null,
+                    cycle_break_seconds: mode === "custom" ? Number(cycleBreakTime)*60 : null
                 }
             )
             sessionStart(response.data)
@@ -59,9 +93,12 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                         id="session_length"
                         value={selectedOption}
                         onChange={(e) => {
+                            setError(null)
                             setSelectedOption(e.target.value)
                             if (e.target.value != "custom"){
                                 setSessionLength(e.target.value)
+                            } else {
+                                setSessionLength("0")
                             }
                         }}
                     >
@@ -84,6 +121,7 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                                 max={9}
                                 value={customSessionHour}
                                 onChange={(e) => {
+                                    setError(null)
                                     const newHour = Number(e.target.value) * 3600
                                     setcustomSessionHour(e.target.value)
                                     setSessionLength(String(newHour + Number(customSessionMinute) * 60))
@@ -101,6 +139,7 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                                 max={59}
                                 value={customSessionMinute}
                                 onChange={(e) => {
+                                    setError(null)
                                     const newMinute = Number(e.target.value) * 60
                                     setcustomSessionMinute(e.target.value)
                                     setSessionLength(String(newMinute + Number(customSessionHour) * 3600))
@@ -128,47 +167,52 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                         <option value="custom">Custom Mode</option>
                     </select>
                 </div>
-                {/* fix seconds input thing */}
+    
                 {mode === "custom" &&
                     <>
-                        <div className="">
+                        <div className="flex">
                             <label htmlFor="cycle_focus" className="">
-                                Focus time in 1 cycle
+                                Focus time in a cycle
                             </label>
                             <input 
                                 id="cycle_focus"
                                 className=""
                                 type="number"
-                                min={600}
-                                max={10800}
+                                min={10}
+                                max={180}
                                 value={cycleFocusTime}
-                                onChange={(e) => setCycleFocusTime(Number(e.target.value))}
+                                onChange={(e) => setCycleFocusTime(e.target.value)}
                                 required
                             />
+                            <div>minute(s)</div>
                         </div>
 
-                        <div className="">
+                        <div className="flex">
                             <label htmlFor="cycle_break" className="">
-                                Break time in 1 cycle
+                                Break time in a cycle
                             </label>
                             <input 
                                 id="cycle_break"
                                 className=""
                                 type="number"
-                                min={60}
-                                max={3600}
+                                min={1}
+                                max={60}
                                 value={cycleBreakTime}
-                                onChange={(e) => setCycleBreakTime(Number(e.target.value))}
+                                onChange={(e) => setCycleBreakTime(e.target.value)}
                                 required
                             />
+                            <div>minute(s)</div>
                         </div>
                     </>
                 }
 
                 {error && <p>{error}</p>}
 
-                <button className="border border-red-400">
-                    Let's Lock In
+                <button 
+                    type="submit"
+                    className="border border-red-400"
+                    disabled={isLoading}
+                    >Let's Lock In
                 </button>
             </form>
         </div>
