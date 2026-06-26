@@ -10,12 +10,16 @@ interface SessionStartProps {
 }
 
 const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
-    const [sessionLength, setSessionLength] = useState<number>(600)
+    const [sessionLength, setSessionLength] = useState<string>("3600")
     const [mode, setMode] = useState<SessionMode>("light")
     const [cycleFocusTime, setCycleFocusTime] = useState<number>(0)
     const [cycleBreakTime, setCycleBreakTime] = useState<number>(0)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null);
+    const [customSessionHour, setcustomSessionHour] = useState<string>("")
+    const [customSessionMinute, setcustomSessionMinute] = useState<string>("")
+    const [selectedOption, setSelectedOption] = useState<string>("3600")
+    
 
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
@@ -24,7 +28,7 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
             const response = await api.post<SessionResponse>(
                 "/api/sessions/schedule",
                 {
-                    session_planned_seconds: sessionLength,
+                    session_planned_seconds: Number(sessionLength),
                     mode: mode,
                     cycle_focus_seconds: mode === "custom" ? cycleFocusTime : null,
                     cycle_break_seconds: mode === "custom" ? cycleBreakTime : null
@@ -50,16 +54,63 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                     <label htmlFor="session_length" className="">
                         Session Length 
                     </label>
-                    <input 
+
+                    <select
                         id="session_length"
-                        className=""
-                        type="number"
-                        min={600}
-                        max={36000}
-                        value={sessionLength}
-                        onChange={(e) => setSessionLength(Number(e.target.value))}
-                        required
-                    />
+                        value={selectedOption}
+                        onChange={(e) => {
+                            setSelectedOption(e.target.value)
+                            if (e.target.value != "custom"){
+                                setSessionLength(e.target.value)
+                            }
+                        }}
+                    >
+                        <option value="1500">25 minutes</option>
+                        <option value="3000">50 minutes</option>
+                        <option value="3600">1 hour</option>
+                        <option value="7200">2 hours</option>
+                        <option value="14400">4 hours</option>
+                        <option value="28800">8 hours</option>
+                        <option value="custom">Custom</option>
+                    </select>
+
+                    {selectedOption === "custom" && 
+                        <div>
+                            <input 
+                                id="hours"
+                                className=""
+                                type="number"
+                                min={0}
+                                max={9}
+                                value={customSessionHour}
+                                onChange={(e) => {
+                                    const newHour = Number(e.target.value) * 3600
+                                    setcustomSessionHour(e.target.value)
+                                    setSessionLength(String(newHour + Number(customSessionMinute) * 60))
+                                }}
+                            />
+                            <label htmlFor="hours" className="">
+                                hour(s) 
+                            </label>
+
+                            <input 
+                                id="minutes"
+                                className=""
+                                type="number"
+                                min={0}
+                                max={59}
+                                value={customSessionMinute}
+                                onChange={(e) => {
+                                    const newMinute = Number(e.target.value) * 60
+                                    setcustomSessionMinute(e.target.value)
+                                    setSessionLength(String(newMinute + Number(customSessionHour) * 3600))
+                                }}
+                            />
+                            <label htmlFor="minutes" className="">
+                                minute(s) 
+                            </label>
+                        </div>
+                    }
                 </div>
 
                 <div className="">
@@ -77,8 +128,8 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
                         <option value="custom">Custom Mode</option>
                     </select>
                 </div>
-
-                {mode == "custom" &&
+                {/* fix seconds input thing */}
+                {mode === "custom" &&
                     <>
                         <div className="">
                             <label htmlFor="cycle_focus" className="">

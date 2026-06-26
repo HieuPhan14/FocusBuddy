@@ -24,3 +24,26 @@ const TimerPage = () => {
 
 export default TimerPage;
 
+// const mockSession: SessionResponse = {
+//     schedule: [[3120, 1020], [3120, 1020], [3120, 0]],
+//     cycle_focus_seconds: 3120,
+//     cycle_break_seconds: 1020 
+// }
+
+// const mockSession2: SessionResponse = {
+//     schedule: [[5,3], [5,3], [5,3], [5,3], [5,3], [5,3], [5,3], [5,3], [5,3], [5,3], [5,3]],
+//     cycle_focus_seconds: 5,
+//     cycle_break_seconds: 3 
+// }
+
+// const TimerPage = () => {
+//     return (
+//     <>
+        
+//             <Timer session={mockSession2}/>
+        
+//     </>
+//     );
+// };
+
+// export default TimerPage;

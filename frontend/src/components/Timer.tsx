@@ -13,11 +13,21 @@ const Timer = ( {session}: TimerProps ) => {
     const startTimeRef = useRef<number>(0)
     const elapsedTimeRef = useRef<number>(0)
     const isPausedRef = useRef<boolean>(false)
-    const isCompletedRef = useRef<boolean>(false)
     const accumulatedBeforeRef = useRef<number>(0)
+    const scrollRef = useRef<HTMLDivElement>(null)
+
     const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
+    const [isCompleted, setIsCompleted] = useState<boolean>(false)
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
-    
+
+    const handleScrollCycle = ():void => {
+        scrollRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center'
+        });
+    }   
+
     useEffect(() => {
         startTimeRef.current = Date.now()
         const id = setInterval(() => {
@@ -27,21 +37,26 @@ const Timer = ( {session}: TimerProps ) => {
                     total_session_planned)
             
                 if (elapsedTimeRef.current >= total_session_planned){
-                    isCompletedRef.current = true
+                    setIsCompleted(true)
                     clearInterval(id)
     
                 } else {
                     const phase_info = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
                     setDisplayInfo(phase_info)
+                    console.log(session.schedule)
+                    console.log(total_session_planned)
                 } 
             }
-            
         }, 250)
 
         return () => clearInterval(id)
     }, [session.schedule, total_session_planned]);
 
-    const togglePause = () => {
+    useEffect(() => {
+        handleScrollCycle()
+    }, [displayInfo?.currentCycleIndex])
+
+    const togglePause = (): void => {
         if (!isPausedRef.current){
             accumulatedBeforeRef.current = elapsedTimeRef.current
             isPausedRef.current = true
@@ -52,6 +67,7 @@ const Timer = ( {session}: TimerProps ) => {
     }
 
     return (
+        <>
         <div className="flex justify-center items-center h-screen">
             <div className="border border-red-400 flex flex-col w-[400px] h-[600px]">
                 <div className="border border-yellow-400 h-3/5">
@@ -74,7 +90,6 @@ const Timer = ( {session}: TimerProps ) => {
                             <div>Time remaining</div>
                             <div>
                                 <div>{formatTime(Math.floor(displayInfo.timeLeftInPhase))}</div>
-                                <div>Current cycle index {displayInfo.currentCycleIndex}</div>
                             </div>
                         </div>
 
@@ -90,27 +105,43 @@ const Timer = ( {session}: TimerProps ) => {
 
                     </div>
 
-                    <div className="border border-red-400">
-                        <div>Current phase</div>
-                        {session.schedule.map((cycle, i) => (
-                            <React.Fragment key={i}>
-                                {cycle[0] != 0 && 
-                                    <div className={clsx(`Focus ${i+1}` === displayInfo.phase && "text-red-400")}>
-                                        {`Focus ${i+1}`} 
-                                    </div>}
-                                {cycle[1] != 0 && 
-                                    <div className={clsx(`Break ${i+1}` === displayInfo.phase && "text-red-400")}> 
-                                        {`Break ${i+1}`} 
-                                    </div>}
-                            </React.Fragment>
-                        ))}
+                    <div className="border border-red-400 flex flex-col h-full">
+                        <div>{`Cycle ${displayInfo.currentCycleIndex} of ${session.schedule.length}`}</div>
+                        
+                        <div className="overflow-y-auto flex-1 overflow-x-hidden">
+                            {session.schedule.map((_, i) => (
+                                <React.Fragment key={i}>
+                                    <div className="flex">
+                                        <div className={clsx(displayInfo.currentCycleIndex === i+1 && "border")}>
+                                            {`Cycle ${i+1}`}
+                                        </div>
+                                        {i+1 < displayInfo.currentCycleIndex && 
+                                            <div>Checked</div>
+                                        }
+                                        {i+1 === displayInfo.currentCycleIndex && 
+                                            <div ref={scrollRef}>
+                                                {displayInfo.phase.startsWith("Focus") ? "Focusing" : "On Break"}
+                                            </div>
+                                        }
+                                        {i+1 > displayInfo.currentCycleIndex && 
+                                            <div>...</div>
+                                        }
+                                    </div>
+                                </React.Fragment>
+                            ))}
+                        </div>
+
                     </div>
                 </div>
                 }
 
-            </div>
+            </div> 
         </div>
+
+        {isCompleted && <div>Finish</div>}
+        </>
     )
 }
 
 export default Timer;
+
