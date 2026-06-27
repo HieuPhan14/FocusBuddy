@@ -1,6 +1,7 @@
 import { createContext, useState, useEffect } from 'react'
 import { getUser, getToken } from "../services/auth"
-import type { LoginCredentials, UserPrivate } from "../services/auth"
+import type { LoginCredentials } from "../services/auth"
+import type { UserPrivate } from '../types/user'
 import getErrorMessage from '../utils/errorUtils'
 
 interface AuthProviderProps {

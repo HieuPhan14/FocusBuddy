@@ -1,4 +1,5 @@
 import api from "./api"
+import type { UserPrivate } from "../types/user"
 
 export interface Token {
     access_token: string
@@ -10,20 +11,13 @@ export interface LoginCredentials {
     password: string
 }
 
-export interface UserPrivate {
-    id: string
-    username: string
-    email: string
-    image_file: string | null
-    image_path: string
-}
-
 const getToken = async (form: LoginCredentials): Promise<Token> => {
     const params = new URLSearchParams({username: form.username, password: form.password})
 
     const response = await api.post<Token>(
         "/api/users/token",
-        params
+        params,
+        {headers: {"Content-Type" : "application/x-www-form-urlencoded"}}
     )
     return response.data
 }

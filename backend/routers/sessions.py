@@ -209,7 +209,14 @@ async def get_session(
     session = result.scalars().first()
 
     if session:
-        session_info = generate_schedule(session)
+        session_create = SessionCreate(
+            session_planned_seconds=session.session_planned_seconds,
+            mode=session.mode,
+            cycle_focus_seconds=session.cycle_focus_seconds,
+            cycle_break_seconds=session.cycle_break_seconds
+        )
+
+        session_info = generate_schedule(session_create)
         response = SessionResponse.model_validate(session)
         return response.model_copy(update={"schedule": session_info["schedule"]})
     

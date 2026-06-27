@@ -14,11 +14,12 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
     const [mode, setMode] = useState<SessionMode>("light")
     const [cycleFocusTime, setCycleFocusTime] = useState<string>("")
     const [cycleBreakTime, setCycleBreakTime] = useState<string>("")
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>(null);
     const [customSessionHour, setcustomSessionHour] = useState<string>("")
     const [customSessionMinute, setcustomSessionMinute] = useState<string>("")
     const [selectedOption, setSelectedOption] = useState<string>("3600")
+    
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null);
     
     const sessionValidation = (sessionLength: number): boolean => {
         if (sessionLength === 0){
