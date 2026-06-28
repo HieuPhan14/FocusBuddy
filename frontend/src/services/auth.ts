@@ -22,10 +22,9 @@ const getToken = async (form: LoginCredentials): Promise<Token> => {
     return response.data
 }
 
-const getUser = async (token: string): Promise<UserPrivate> => {
+const getUser = async (): Promise<UserPrivate> => {
     const response = await api.get<UserPrivate>(
         "/api/users/me",
-        {headers: {Authorization: `Bearer ${token}`}}
     )
     return response.data
 }

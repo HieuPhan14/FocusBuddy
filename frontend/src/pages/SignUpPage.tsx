@@ -14,32 +14,29 @@ const SignUpPage = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null);
+    const [passwordErr, setPasswordErr] = useState<string[]>([])
 
-    const { login, error: authError } = useAuth()
+    const { login } = useAuth()
     const navigate = useNavigate()
 
-    const passwordValidation = (password: string, confirmPassword: string): boolean => {
+    const passwordValidation = (password: string, confirmPassword: string): string[] => {
+        const errs: string[] = []
         if (password.length < 8 || password.length > 120){
-            setError("Password length must be between (8-120) characters")
-            return false
+            errs.push("Password length must be between (8-120) characters")
         }
         if (!/[A-Z]/.test(password)){
-            setError("Password must contain at least one uppercase letter")
-            return false
+            errs.push("Password must contain at least one uppercase letter")
         }
         if (!/[0-9]/.test(password)){
-            setError("Password must contain at least one number")
-            return false
+            errs.push("Password must contain at least one number")
         }
         if (!/[!@#$%^&*]/.test(password)){
-            setError("Password must contain at least one special character")
-            return false
+            errs.push("Password must contain at least one special character")
         }
         if (password !== confirmPassword){
-            setError("Confirm password did not match.")
-            return false
+            errs.push("Confirm password did not match.")
         }
-        return true
+        return errs
     }
 
     const inputValidation = (username: string, email: string): boolean => {
@@ -58,12 +55,16 @@ const SignUpPage = () => {
     const handleSubmit = async (e: React.SyntheticEvent) => {
         e.preventDefault()
         setError(null)
+        setPasswordErr([])
 
         if (!inputValidation(username, email))
             return
 
-        if(!passwordValidation(password, confirmPassword))
+        const passErr = passwordValidation(password, confirmPassword)
+        if(passErr.length > 0){
+            setPasswordErr(passErr)
             return
+        }
 
         try{
             setIsLoading(true)
@@ -146,6 +147,7 @@ const SignUpPage = () => {
                         maxLength={120}
                         onChange={(e) => {
                             setError(null)
+                            setPasswordErr([])
                             setPassword(e.target.value)
                         }}
                         required
@@ -163,6 +165,7 @@ const SignUpPage = () => {
                         maxLength={120}
                         onChange={(e) => {
                             setError(null)
+                            setPasswordErr([])
                             setConfirmPassword(e.target.value)
                         }}
                         required
@@ -172,7 +175,7 @@ const SignUpPage = () => {
                 {error && error.split("\n").map((msg, i) => 
                     <div key={i}>{msg}</div>)}
 
-                {authError && authError.split("\n").map((msg, i) => 
+                {passwordErr.length > 0 && passwordErr.map((msg, i) => 
                     <div key={i}>{msg}</div>)}
 
                 <button 

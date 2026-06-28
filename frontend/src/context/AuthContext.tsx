@@ -23,16 +23,15 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 const AuthProvider = ({children}: AuthProviderProps) => {
     const [user, setUser] = useState<UserPrivate | null>(null);
     const [token, setToken] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const restore = async () => {
-            setIsLoading(true)
             const token_str = localStorage.getItem("token")
             if (token_str) {
                 try{
-                    const user = await getUser(token_str)
+                    const user = await getUser()
                     setToken(token_str)
                     setUser(user)
                 } catch {
@@ -52,13 +51,14 @@ const AuthProvider = ({children}: AuthProviderProps) => {
             setError(null)
             setIsLoading(true)
             const token = await getToken(credentials)
-            const user = await getUser(token.access_token)
+            localStorage.setItem("token", token.access_token)
+            const user = await getUser()
             setToken(token.access_token)
             setUser(user)
-            localStorage.setItem("token", token.access_token)
         }
         catch (error) {
             setError(getErrorMessage(error))
+            throw error
         } finally {
             setIsLoading(false)
         }
