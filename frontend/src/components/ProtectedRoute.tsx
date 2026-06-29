@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }): React.ReactNode => {
-    const { isAuthenticated, isLoading } = useAuth()
+    const { isAuthenticated, isRestoring } = useAuth()
     
-    if (isLoading)
+    if (isRestoring)
         return null
 
     if (!isAuthenticated) 

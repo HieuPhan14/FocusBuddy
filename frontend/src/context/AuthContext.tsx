@@ -16,6 +16,7 @@ interface AuthContextType {
     isAuthenticated: boolean
     isLoading: boolean
     error: string | null
+    isRestoring: boolean
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -23,8 +24,9 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 const AuthProvider = ({children}: AuthProviderProps) => {
     const [user, setUser] = useState<UserPrivate | null>(null);
     const [token, setToken] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
+    const [isRestoring, setIsRestoring] = useState<boolean>(true)
 
     useEffect(() => {
         const restore = async () => {
@@ -38,7 +40,7 @@ const AuthProvider = ({children}: AuthProviderProps) => {
                     localStorage.removeItem("token")
                 }
             } 
-            setIsLoading(false)
+            setIsRestoring(false)
         }
         restore()
     }, [])
@@ -65,13 +67,14 @@ const AuthProvider = ({children}: AuthProviderProps) => {
     }
 
     const logout = (): void => {
+            setError(null)
             setToken(null)
             setUser(null)
             localStorage.removeItem("token")
     }
 
     return (
-        <AuthContext.Provider value={{user, token, login, logout, isAuthenticated, isLoading, error}}>
+        <AuthContext.Provider value={{user, token, login, logout, isAuthenticated, isLoading, error, isRestoring}}>
             {children}
         </AuthContext.Provider>
     );

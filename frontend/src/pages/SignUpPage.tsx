@@ -34,19 +34,19 @@ const SignUpPage = () => {
             errs.push("Password must contain at least one special character")
         }
         if (password !== confirmPassword){
-            errs.push("Confirm password did not match.")
+            errs.push("Confirm password did not match")
         }
         return errs
     }
 
     const inputValidation = (username: string, email: string): boolean => {
         if (username.length < 1 || username.length > 50){
-            setError("Please enter an username between (1-50) characters.")
+            setError("Please enter an username between (1-50) characters")
             return false
         }
         
         if (email.length < 1 || email.length > 120){
-            setError("Please enter an email between (1-120) characters.")
+            setError("Please enter an email between (1-120) characters")
             return false
         }
         return true
@@ -109,6 +109,7 @@ const SignUpPage = () => {
                         value={username}
                         id="username"
                         type="text"
+                        autoComplete="off"
                         minLength={1}
                         maxLength={50}
                         onChange={(e) => {
@@ -126,6 +127,7 @@ const SignUpPage = () => {
                         value={email}
                         id="email"
                         type="email"
+                        autoComplete="email"
                         minLength={1}
                         maxLength={120}
                         onChange={(e) => {
@@ -143,6 +145,7 @@ const SignUpPage = () => {
                         value={password}
                         id="password"
                         type="password"
+                        autoComplete="new-password"
                         minLength={8}
                         maxLength={120}
                         onChange={(e) => {
@@ -161,6 +164,7 @@ const SignUpPage = () => {
                         value={confirmPassword}
                         id="confirmPassword"
                         type="password"
+                        autoComplete="new-password"
                         minLength={8}
                         maxLength={120}
                         onChange={(e) => {
