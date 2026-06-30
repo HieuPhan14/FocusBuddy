@@ -1,15 +1,16 @@
 import React, { useState }  from "react";
-import api from "../services/api";
 import getErrorMessage from "../utils/errorUtils";
-import type { SessionResponse } from "../types/session"
+import type { SessionCreate, SessionResponse, SessionSchedule } from "../types/session"
+import createSession from "../services/session";
 
 type SessionMode = "light" | "normal" | "custom" | "intense"
 
 interface SessionStartProps {
-    sessionStart: (data: SessionResponse) => void
+    sessionStart: (data: SessionSchedule | SessionResponse) => void
+    isAuth: boolean
 }
 
-const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
+const SessionConfig = ( { sessionStart, isAuth }: SessionStartProps ) => {
     const [sessionLength, setSessionLength] = useState<string>("3600")
     const [mode, setMode] = useState<SessionMode>("light")
     const [cycleFocusTime, setCycleFocusTime] = useState<string>("")
@@ -60,16 +61,15 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
 
         try{
             setIsLoading(true)
-            const response = await api.post<SessionResponse>(
-                "/api/sessions/schedule",
-                {
-                    session_planned_seconds: Number(sessionLength),
-                    mode: mode,
-                    cycle_focus_seconds: mode === "custom" ? Number(cycleFocusTime)*60 : null,
-                    cycle_break_seconds: mode === "custom" ? Number(cycleBreakTime)*60 : null
-                }
-            )
-            sessionStart(response.data)
+            const session: SessionCreate = {
+                session_planned_seconds: Number(sessionLength),
+                mode: mode,
+                cycle_focus_seconds: mode === "custom" ? Number(cycleFocusTime)*60 : null,
+                cycle_break_seconds: mode === "custom" ? Number(cycleBreakTime)*60 : null
+            }
+
+            const response = await createSession(session, isAuth)
+            sessionStart(response)
         } catch (error){
             setError(getErrorMessage(error))
         } finally {
@@ -80,7 +80,7 @@ const SessionConfig = ( { sessionStart }: SessionStartProps ) => {
     return (
     <>
         {isLoading ? <p>Loading</p> :
-        <div className="border border-red-400 min-h-screen">
+        <div className="border border-red-400 h-full">
             <form
                 className=""
                 onSubmit={handleSubmit}

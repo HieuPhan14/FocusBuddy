@@ -1,4 +1,4 @@
-import type { SessionResponse } from "../types/session";
+import type { SessionSchedule } from "../types/session";
 import { useEffect, useRef, useState } from "react";
 import {handlePhase, formatTime} from "../lib/timer";
 import type { PhaseInfo } from "../lib/timer";
@@ -6,7 +6,7 @@ import React from "react";
 import clsx from "clsx"
 
 interface TimerProps {
-    session: SessionResponse
+    session: SessionSchedule
 }
 
 const Timer = ( {session}: TimerProps ) => {
@@ -14,6 +14,7 @@ const Timer = ( {session}: TimerProps ) => {
     const elapsedTimeRef = useRef<number>(0)
     const isPausedRef = useRef<boolean>(false)
     const accumulatedBeforeRef = useRef<number>(0)
+
     const scrollRef = useRef<HTMLDivElement>(null)
 
     const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
@@ -43,8 +44,6 @@ const Timer = ( {session}: TimerProps ) => {
                 } else {
                     const phase_info = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
                     setDisplayInfo(phase_info)
-                    console.log(session.schedule)
-                    console.log(total_session_planned)
                 } 
             }
         }, 250)
@@ -68,7 +67,7 @@ const Timer = ( {session}: TimerProps ) => {
 
     return (
         <>
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-full">
             <div className="border border-red-400 flex flex-col w-[400px] h-[600px]">
                 <div className="border border-yellow-400 h-3/5">
                     <div>This is top 60%</div>
@@ -137,7 +136,7 @@ const Timer = ( {session}: TimerProps ) => {
 
             </div> 
         </div>
-
+        
         {isCompleted && <div>Finish</div>}
         </>
     )
