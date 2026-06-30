@@ -1,7 +1,7 @@
 import React, { useState }  from "react";
 import getErrorMessage from "../utils/errorUtils";
 import type { SessionCreate, SessionResponse, SessionSchedule } from "../types/session"
-import createSession from "../services/session";
+import {createSession} from "../services/session";
 
 type SessionMode = "light" | "normal" | "custom" | "intense"
 

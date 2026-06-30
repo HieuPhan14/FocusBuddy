@@ -22,3 +22,7 @@ export interface SessionCreate {
     cycle_focus_seconds: number | null
     cycle_break_seconds: number | null
 }
+
+export interface SessionUpdate {
+    status: "completed" | "abandoned"
+}

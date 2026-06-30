@@ -10,6 +10,7 @@ const NavBar = () => {
         {!isAuthenticated 
             ?
             <div className="flex">
+                <Link to="/">Timer</Link>
                 <Link to="/login">Log in</Link>
                 <Link to="/signup">Sign up</Link>
             </div>

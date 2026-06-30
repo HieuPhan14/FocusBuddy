@@ -7,9 +7,10 @@ import clsx from "clsx"
 
 interface TimerProps {
     session: SessionSchedule
+    handleComplete: () => Promise<void>
 }
 
-const Timer = ( {session}: TimerProps ) => {
+const Timer = ( {session, handleComplete}: TimerProps ) => {
     const startTimeRef = useRef<number>(0)
     const elapsedTimeRef = useRef<number>(0)
     const isPausedRef = useRef<boolean>(false)
@@ -54,6 +55,12 @@ const Timer = ( {session}: TimerProps ) => {
     useEffect(() => {
         handleScrollCycle()
     }, [displayInfo?.currentCycleIndex])
+
+    useEffect(() => {
+        if (isCompleted)
+            handleComplete()
+    //eslint-disable-next-line
+    }, [isCompleted])
 
     const togglePause = (): void => {
         if (!isPausedRef.current){
@@ -133,11 +140,9 @@ const Timer = ( {session}: TimerProps ) => {
                     </div>
                 </div>
                 }
-
+            {isCompleted && <div>Congratulation</div>}
             </div> 
         </div>
-        
-        {isCompleted && <div>Finish</div>}
         </>
     )
 }

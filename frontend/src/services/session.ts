@@ -1,5 +1,6 @@
-import type { SessionCreate, SessionResponse, SessionSchedule } from "../types/session";
+import type { SessionCreate, SessionResponse, SessionSchedule, SessionUpdate } from "../types/session";
 import api from "./api";
+
 
 const createSession = async (session: SessionCreate, isAuthenticated: boolean): Promise<SessionResponse | SessionSchedule> => {
     if (isAuthenticated){
@@ -28,4 +29,12 @@ const createSession = async (session: SessionCreate, isAuthenticated: boolean): 
     }
 }
 
-export default createSession;
+const markCompleted = async (session_id: string, status: SessionUpdate): Promise<SessionResponse> => {
+    const response = await api.patch<SessionResponse>(
+        `/api/sessions/${session_id}`,
+        status
+    )  
+    return response.data
+}
+
+export {markCompleted, createSession};
