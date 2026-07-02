@@ -174,11 +174,15 @@ async def get_user_stats(
     longest_streak = current_streak
 
     for i, session in enumerate(sessions):
-        if i >= 1 and (sessions[i-1].started_at.date() - sessions[i].started_at.date() == timedelta(days=1)):
-            current_streak += 1
-        else:
-            longest_streak = max(current_streak, longest_streak)
-            current_streak = 1
+        if i >= 1:
+            daygap = sessions[i-1].started_at.date() - sessions[i].started_at.date()
+            if daygap == timedelta(days=0):
+                pass
+            elif daygap == timedelta(days=1):
+                current_streak += 1
+            else:
+                longest_streak = max(current_streak, longest_streak)
+                current_streak = 1
 
         if session.status == SessionStatus.completed:
             number_of_completed_sessions += 1

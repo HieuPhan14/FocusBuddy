@@ -47,8 +47,11 @@ const StatPage = () => {
         let ignore = false 
 
         const load = async () => {
+            const statPromise = getStats()
+            const sessionsPromise = getAllSessions(skipRef.current)
+
             try {
-                const statResponse = await getStats()
+                const statResponse = await statPromise
                 if (!ignore) setStat(statResponse)
             } catch (error) {
                 if (!ignore) setStatError(getErrorMessage(error))
@@ -57,7 +60,7 @@ const StatPage = () => {
             }
 
             try {
-                const sessionsResponse = await getAllSessions(skipRef.current)
+                const sessionsResponse = await sessionsPromise
                 if (!ignore) setSessions(sessionsResponse)
             } catch (error) {
                 if (!ignore) setSessionsInfoError(getErrorMessage(error))
@@ -66,6 +69,7 @@ const StatPage = () => {
             }
 
         }
+
         load()
         return () => { ignore = true }
     }, [])
@@ -94,7 +98,6 @@ const StatPage = () => {
             </div>
             }
 
-            {isLoadMoreLoading ? <div>Loading</div> :
             <div>
                 {sessionsInfoError && <div>{sessionsInfoError}</div>}
                 {sessionInfo && 
@@ -125,6 +128,7 @@ const StatPage = () => {
                     {sessionInfo.has_more &&
                         <button
                             className="border border-red-400"
+                            disabled={isLoadMoreLoading}
                             onClick={() => {
                                 skipRef.current += 10
                                 loadSession()
@@ -135,10 +139,11 @@ const StatPage = () => {
                     }
                 </div>
                 }
-                
 
+                {isLoadMoreLoading && <div>Loading more sessions</div>}
+                
             </div>
-            }
+            
         </div>
     </>
     );
