@@ -26,3 +26,11 @@ export interface SessionCreate {
 export interface SessionUpdate {
     status: "completed" | "abandoned"
 }
+
+export interface PaginatedSessionResponse {
+    sessions: SessionResponse[]
+    total: number
+    skip: number
+    limit: number
+    has_more: boolean
+}

@@ -1,4 +1,4 @@
-import type { SessionCreate, SessionResponse, SessionSchedule, SessionUpdate } from "../types/session";
+import type { PaginatedSessionResponse, SessionCreate, SessionResponse, SessionSchedule, SessionUpdate } from "../types/session";
 import api from "./api";
 
 
@@ -37,4 +37,11 @@ const markCompleted = async (session_id: string, status: SessionUpdate): Promise
     return response.data
 }
 
-export {markCompleted, createSession};
+const getAllSessions = async (skip: number): Promise<PaginatedSessionResponse> => {
+    const response = await api.get<PaginatedSessionResponse>(
+        `/api/sessions?skip=${skip}`,
+    )
+    return response.data
+}
+
+export {markCompleted, createSession, getAllSessions};

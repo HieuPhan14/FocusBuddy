@@ -7,7 +7,7 @@ import passwordValidation from "../utils/passwordValidation";
 
 const ProfilePage = () => {
     const { user, setUser, logout } = useAuth()
-    const [isSuccessfulUpdateProfule, setIsSuccessfulUpdateProfule] = useState<boolean>(false)
+    const [isSuccessfulUpdateProfile, setIsSuccessfulUpdateProfile] = useState<boolean>(false)
 
     const [username, setUsername] = useState<string>(user?.username ?? "")
     const [email, setEmail] = useState<string>(user?.email ?? "")
@@ -37,7 +37,9 @@ const ProfilePage = () => {
                 email: email !== "" ? email : null}        
             )
             setUser(response)
-            setIsSuccessfulUpdateProfule(true)
+            setUsername(response.username)
+            setEmail(response.email)
+            setIsSuccessfulUpdateProfile(true)
         }
         catch (error){
             setErrorUsernameEmail(getErrorMessage(error))
@@ -49,7 +51,7 @@ const ProfilePage = () => {
         try{
             if (fileUpload){
                 const response = await changeProfilePicture(user.id, fileUpload)
-                setIsSuccessfulUpdateProfule(true)
+                setIsSuccessfulUpdateProfile(true)
                 setUser(response)
             }
         } catch (error) {
@@ -141,7 +143,7 @@ const ProfilePage = () => {
                     />
                 </div>
 
-                {isSuccessfulUpdateProfule && <div>Profile Update Successfully</div>}
+                {isSuccessfulUpdateProfile && <div>Profile Update Successfully</div>}
                 {errorUsernameEmail && <div>{errorUsernameEmail}</div>}
 
                 <button 
@@ -253,7 +255,7 @@ const ProfilePage = () => {
             
             <button 
                     className="border border-red-400"
-                    type="submit"
+                    type="button"
                     onClick={logout}
                 >
                     Logout
@@ -264,6 +266,7 @@ const ProfilePage = () => {
                 
                 <button
                     className="border border-red-400"
+                    type="button"
                     onClick={() => setIsDeleting(true)}
                 >
                     Delete Account
@@ -271,10 +274,11 @@ const ProfilePage = () => {
                 
                 {isDeleting && 
                     <div>
-                        <div>Are you sure you want to delete your account? This action cannot be undone. All your posts will be permanently deleted</div>
+                        <div>Are you sure you want to delete your account? This action cannot be undone. All your sessions and stats will be permanently deleted</div>
 
                         <button 
                             className="border border-red-400"
+                            type="button"
                             onClick={handleDeleteUser}
                         >
                             Delete Account
@@ -282,6 +286,7 @@ const ProfilePage = () => {
 
                         <button
                             className="border border-red-400"
+                            type="button"
                             onClick={() => setIsDeleting(false)}
                         >
                             Cancel
