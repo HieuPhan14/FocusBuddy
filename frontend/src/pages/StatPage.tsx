@@ -16,7 +16,7 @@ const StatPage = () => {
     const skipRef = useRef<number>(0)
     const [sessionInfo, setSessions] = useState<PaginatedSessionResponse | null>(null)
     const [sessionsInfoError, setSessionsInfoError] = useState<string>("")
-    const [isLoadMoreLoading, setIsLoadMoreLoading] = useState<boolean>(true)
+    const [isLoadMoreLoading, setIsLoadMoreLoading] = useState<boolean>(false)
     
     const loadSession = async () => {
         setIsLoadMoreLoading(true)
@@ -103,11 +103,11 @@ const StatPage = () => {
                 {sessionInfo && 
                 <div>
                     {sessionInfo.sessions.map((session, i) =>
-                        <div key={i} className="border border-red-400 m-10">
-                            <div>Session ID: {session.id}</div>
+                        <div key={session.id} className="border border-red-400 m-10">
+                            <div>Session number: {i+1}</div>
                             <div>Status: {session.status}</div>
 
-                            <div>Stated at: 
+                            <div>Started at: 
                                 {session.started_at ? 
                                     new Date(session.started_at).toLocaleString()
                                     : "No date to show"
