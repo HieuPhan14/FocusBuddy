@@ -12,3 +12,8 @@ export interface UserPublic{
     image_file: string | null
     image_path: string
 }
+
+export interface UserUpdate{
+    username: string | null
+    email: string | null
+}

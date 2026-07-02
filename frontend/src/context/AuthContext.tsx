@@ -17,6 +17,7 @@ interface AuthContextType {
     isLoading: boolean
     error: string | null
     isRestoring: boolean
+    setUser: React.Dispatch<React.SetStateAction<UserPrivate | null>>
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -74,7 +75,7 @@ const AuthProvider = ({children}: AuthProviderProps) => {
     }
 
     return (
-        <AuthContext.Provider value={{user, token, login, logout, isAuthenticated, isLoading, error, isRestoring}}>
+        <AuthContext.Provider value={{user, token, login, logout, isAuthenticated, isLoading, error, isRestoring, setUser}}>
             {children}
         </AuthContext.Provider>
     );

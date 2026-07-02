@@ -5,6 +5,7 @@ import api from "../services/api";
 import getErrorMessage from "../utils/errorUtils";
 import { useAuth } from "../hooks/useAuth";
 import type { LoginCredentials } from "../services/auth";
+import passwordValidation from "../utils/passwordValidation";
 
 const SignUpPage = () => {
     const [username, setUsername] = useState<string>("")
@@ -18,26 +19,6 @@ const SignUpPage = () => {
 
     const { login } = useAuth()
     const navigate = useNavigate()
-
-    const passwordValidation = (password: string, confirmPassword: string): string[] => {
-        const errs: string[] = []
-        if (password.length < 8 || password.length > 120){
-            errs.push("Password length must be between (8-120) characters")
-        }
-        if (!/[A-Z]/.test(password)){
-            errs.push("Password must contain at least one uppercase letter")
-        }
-        if (!/[0-9]/.test(password)){
-            errs.push("Password must contain at least one number")
-        }
-        if (!/[!@#$%^&*]/.test(password)){
-            errs.push("Password must contain at least one special character")
-        }
-        if (password !== confirmPassword){
-            errs.push("Confirm password did not match")
-        }
-        return errs
-    }
 
     const inputValidation = (username: string, email: string): boolean => {
         if (username.length < 1 || username.length > 50){

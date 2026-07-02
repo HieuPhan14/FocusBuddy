@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }): React.Reac
         return null
 
     if (!isAuthenticated) 
-        return <Navigate to="/"/>
+        return <Navigate to="/login"/>
     
     return children 
 }

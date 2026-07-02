@@ -2,7 +2,6 @@ import { useState } from "react";
 import SessionConfig from "../components/SessionConfig";
 import Timer from "../components/Timer";
 import type { SessionResponse, SessionSchedule } from "../types/session";
-import NavBar from "../components/NavBar";
 import { useAuth } from "../hooks/useAuth";
 import { markCompleted } from "../services/session";
 
@@ -25,8 +24,7 @@ const TimerPage = () => {
 
     return (
     <>
-    <div className="flex flex-col h-screen">
-        <NavBar />
+    <div className="flex flex-col h-full">
         {sessionInfo 
         ?
             <Timer session={sessionInfo} handleComplete={handleOnComplete}/>

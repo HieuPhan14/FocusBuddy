@@ -6,7 +6,6 @@ const NavBar = () => {
     
     return (
     <>
-
         {!isAuthenticated 
             ?
             <div className="flex">
