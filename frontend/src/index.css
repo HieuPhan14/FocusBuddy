@@ -9,3 +9,10 @@
 .animate-drift-med { animation: drift 75s linear infinite }
 .animate-drift-fast { animation: drift 50s linear infinite }
 .animate-drift-test { animation: drift 10s linear infinite }
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.animate-twinkle { animation: twinkle 4s ease-in-out infinite; }

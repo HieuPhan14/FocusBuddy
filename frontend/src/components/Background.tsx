@@ -1,4 +1,13 @@
-const Background = () => {
+import type { BackgroundTheme } from "./Layout";
+
+interface BackgroundProps {
+    theme: BackgroundTheme
+}
+
+const Background = ( { theme }: {theme: BackgroundTheme}) => {
+
+
+
     // return (
     // <>
     //     <div className="absolute inset-0 overflow-hidden">
@@ -40,65 +49,147 @@ const Background = () => {
     //     </div>    
     // </>
     // )
-    return (
-    <>
-        <div className="absolute inset-0 overflow-hidden">
-            <div>
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/1.png" 
-                    className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
-                />
-            </div>
+    // return (
+    // <>
+    //     <div className="absolute inset-0 overflow-hidden">
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/1.png" 
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
 
-            <div>
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/2_add.png" 
-                    className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
-                />
-            </div>
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/2_add.png" 
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
 
-            <div>
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/3_add.png" 
-                    className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
-                />
-            </div>
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/3_add.png" 
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
 
-            <div className="absolute inset-0 flex w-[200%] h-full animate-drift-slow">
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/2.png" 
-                    className="w-1/2 h-full object-fill [image-rendering:pixelated]"
-                />
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/2.png" 
-                    className="w-1/2 h-full object-fill [image-rendering:pixelated]"
-                />
-            </div>
+    //         <div className="absolute inset-0 flex w-[200%] h-full animate-drift-slow">
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/2.png" 
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/2.png" 
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
 
-            <div className="absolute inset-0 flex w-[200%] h-full animate-drift-med">
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/3.png" 
-                    className="w-1/2 h-full object-fill [image-rendering:pixelated]"
-                />
-                 <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/3.png" 
-                    className="w-1/2 h-full object-fill [image-rendering:pixelated]"
-                />
-            </div>
+    //         <div className="absolute inset-0 flex w-[200%] h-full animate-drift-med">
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/3.png" 
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //              <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/3.png" 
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
 
-            <div className="absolute inset-0 flex w-[200%] h-full animate-drift-fast">
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/4.png" 
-                    className="w-1/2 h-full object-fill [image-rendering:pixelated]"
-                />
-                <img 
-                    src="/backgrounds/cloud_and_beach/cloud1/4.png" 
-                    className="w-1/2 h-full object-fill [image-rendering:pixelated]"
-                />
-            </div>
-        </div>
-    </>
-    )
+    //         <div className="absolute inset-0 flex w-[200%] h-full animate-drift-fast">
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/4.png" 
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //             <img 
+    //                 src="/backgrounds/cloud_and_beach/cloud1/4.png" 
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+    //     </div>
+    // </>
+    // )
+
+    // return (
+    // <>
+    //     <div className="absolute inset-0 overflow-hidden">
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/nightsky.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/stars1a.png"
+    //                 className="animate-twinkle absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //                 style={{ animationDelay: "0s" }}
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/stars1b.png"
+    //                 className="animate-twinkle absolute inset-0 w-full h-full object-fill opacity-30 [image-rendering:pixelated]"
+    //                 style={{ animationDelay: "2s" }}
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/moon.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/city1.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/city2.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/city3.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/city4.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div>
+    //             <img 
+    //                 src="/backgrounds/night/tree.png"
+    //                 className="absolute inset-0 w-full h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+
+    //         <div className="absolute inset-0 flex w-[200%] h-full animate-drift-slow">
+    //             <img 
+    //                 src="/backgrounds/night/cloud.png"
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //             <img 
+    //                 src="/backgrounds/night/cloud.png"
+    //                 className="w-1/2 h-full object-fill [image-rendering:pixelated]"
+    //             />
+    //         </div>
+    //     </div>
+    // </>
+    // )
 }
 
 export default Background;
