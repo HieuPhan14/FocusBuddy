@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+@keyframes drift {
+    from { transform: translate(0) }
+    to { transform: translate(-50%)}
+}
+
+.animate-drift-slow { animation: drift 150s linear infinite }
+.animate-drift-med { animation: drift 75s linear infinite }
+.animate-drift-fast { animation: drift 50s linear infinite }
+.animate-drift-test { animation: drift 10s linear infinite }
