@@ -13,10 +13,10 @@ const Layout = () => {
     }
     return (
         <div className="flex flex-col h-screen relative">
-            <Background />
+            <Background theme={theme}/>
 
             <div className="relative z-10">
-                <NavBar themeOption={handleTheme}/>
+                <NavBar themeOption={handleTheme} theme={theme}/>
             </div>
 
             <main className="flex-1 h-full relative z-10">
