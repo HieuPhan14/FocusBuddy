@@ -74,8 +74,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
 
     return (
         <>
-        <div className="flex justify-center items-center h-full">
-            <div className="border border-red-400 flex flex-col w-[400px] h-[600px]">
+            <div className="flex flex-col h-full">
                 <div className="border border-yellow-400 h-3/5">
                     <div>This is top 60%</div>
                     <button
@@ -140,9 +139,9 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                     </div>
                 </div>
                 }
-            {isCompleted && <div>Congratulation</div>}
-            </div> 
-        </div>
+            {isCompleted && <div>Congratulation</div>} 
+            </div>
+            
         </>
     )
 }

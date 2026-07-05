@@ -80,7 +80,6 @@ const SessionConfig = ( { sessionStart, isAuth }: SessionStartProps ) => {
     return (
     <>
         {isLoading ? <p>Loading</p> :
-        <div className="border border-red-400 h-full">
             <form
                 className=""
                 onSubmit={handleSubmit}
@@ -168,7 +167,7 @@ const SessionConfig = ( { sessionStart, isAuth }: SessionStartProps ) => {
                         <option value="custom">Custom Mode</option>
                     </select>
                 </div>
-    
+
                 {mode === "custom" &&
                     <>
                         <div className="flex">
@@ -216,7 +215,6 @@ const SessionConfig = ( { sessionStart, isAuth }: SessionStartProps ) => {
                     >Let's Lock In
                 </button>
             </form>
-        </div>
         }
     </>
     );

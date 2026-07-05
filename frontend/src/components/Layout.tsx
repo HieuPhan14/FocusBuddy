@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Background from "./Background";
 import NavBar from "./NavBar"
 import { Outlet } from "react-router-dom";
+import clsx from "clsx";
 
 export type BackgroundTheme = "summer" | "night" | "beach"
 
@@ -41,7 +42,7 @@ const Layout = () => {
     }
 
     return (
-        <div className="flex flex-col h-screen relative">
+        <div className={clsx("flex flex-col h-screen relative", theme === "night" ? "theme-night" : "")}>
             <audio ref={audioRef} src="/audio/background_music.mp3" loop/>
             <Background theme={theme}/>
 

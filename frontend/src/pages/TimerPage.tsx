@@ -4,7 +4,7 @@ import Timer from "../components/Timer";
 import type { SessionResponse, SessionSchedule } from "../types/session";
 import { useAuth } from "../hooks/useAuth";
 import { markCompleted } from "../services/session";
-
+import Card from "../components/Card";
 
 const TimerPage = () => {
     const { isAuthenticated } = useAuth()
@@ -25,13 +25,16 @@ const TimerPage = () => {
     return (
     <>
     <div className="flex flex-col h-full">
-        {sessionInfo 
-        ?
-            <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
-        :
-            <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated}/>
-        }
-        {completedResponse && <div>Congratulation</div>}
+        <Card>
+            {sessionInfo 
+            ?
+                <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
+            
+            :
+                <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated}/>
+            }
+            {completedResponse && <div>Congratulation</div>}
+        </Card>
     </div>
     </>
     );

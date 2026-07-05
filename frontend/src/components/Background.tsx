@@ -121,7 +121,7 @@ const Background = ( { theme }: BackgroundProps) => {
         )}
     
         {theme === "night" && (
-            <div className="absolute inset-0 overflow-hidden theme-night">
+            <div className="absolute inset-0 overflow-hidden">
                 <div>
                     <img 
                         alt=""
