@@ -27,7 +27,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     }   
 
     useEffect(() => {
-        const phaseInfo = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
+        const phaseInfo = handlePhase(total_session_planned, Math.floor(elapsedTimeRef.current), session.schedule)
         setDisplayInfo(phaseInfo)
 
         const id = setInterval(() => {
@@ -42,7 +42,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                     clearInterval(id)
                     
                 } else {
-                    const phaseInfo = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
+                    const phaseInfo = handlePhase(total_session_planned, Math.floor(elapsedTimeRef.current), session.schedule)
                     setDisplayInfo(phaseInfo)
                 }
             }
@@ -96,13 +96,13 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                         <div className="border border-brown-400">
                             <div>Time remaining</div>
                             <div>
-                                <div>{formatTime(Math.floor(displayInfo.timeLeftInPhase))}</div>
+                                <div>{formatTime(displayInfo.timeLeftInPhase)}</div>
                             </div>
                         </div>
 
                         <div className="border border-brown-400">
                             <div>Total focus</div>
-                            <div>{formatTime(Math.floor(displayInfo.focusAccumulated))}</div>
+                            <div>{formatTime(displayInfo.focusAccumulated)}</div>
                         </div>
 
                         <div className="border border-brown-400">
