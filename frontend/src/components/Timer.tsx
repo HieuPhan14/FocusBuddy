@@ -12,9 +12,8 @@ interface TimerProps {
 }
 
 const Timer = ( {session, handleComplete}: TimerProps ) => {
-    const { startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef} = useTimer()
+    const { endSession, isCompleted, setIsCompleted, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef} = useTimer()
 
-    const [isCompleted, setIsCompleted] = useState<boolean>(false)
     const scrollRef = useRef<HTMLDivElement>(null)
     const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
@@ -41,24 +40,24 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 if (elapsedTimeRef.current >= total_session_planned){
                     setIsCompleted(true)
                     clearInterval(id)
-    
+                    
                 } else {
                     const phaseInfo = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
                     setDisplayInfo(phaseInfo)
                 }
             }
-
+            
         }, 250)
-
+        
         return () => {
             clearInterval(id)
         }
-    }, [session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef]);
-
+    }, [setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef]);
+    
     useEffect(() => {
         handleScrollCycle()
     }, [displayInfo?.currentCycleIndex])
-
+    
     useEffect(() => {
         if (isCompleted)
             handleComplete()
@@ -142,7 +141,13 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                     </div>
                 </div>
                 }
-            {isCompleted && <div>Congratulation</div>} 
+            {isCompleted && 
+                <button
+                    onClick={endSession}
+                >
+                    Congratulation u nailed this focus session. Click to progress.
+                </button>
+            } 
             </div>
             
         </>

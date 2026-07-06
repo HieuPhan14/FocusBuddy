@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import handlePhase from "./timer";
+import { handlePhase } from "./timer";
 
 const SCHEDULE: [number, number][] = [[3120, 1020], [3120, 1020], [3120, 0]] 
 const TOTAL_SESSION_PLANNED: number = SCHEDULE.reduce((acc, [a, b]) => acc + a + b, 0)

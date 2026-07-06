@@ -8,9 +8,11 @@ type SessionMode = "light" | "normal" | "custom" | "intense"
 interface SessionStartProps {
     sessionStart: (data: SessionSchedule | SessionResponse) => void
     isAuth: boolean
+    setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>
+    audioRef: React.RefObject<HTMLAudioElement | null>
 }
 
-const SessionConfig = ( { sessionStart, isAuth }: SessionStartProps ) => {
+const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: SessionStartProps ) => {
     const [sessionLength, setSessionLength] = useState<string>("3600")
     const [mode, setMode] = useState<SessionMode>("light")
     const [cycleFocusTime, setCycleFocusTime] = useState<string>("")
@@ -82,7 +84,10 @@ const SessionConfig = ( { sessionStart, isAuth }: SessionStartProps ) => {
         {isLoading ? <p>Loading</p> :
             <form
                 className=""
-                onSubmit={handleSubmit}
+                onSubmit={(e) => {
+                    handleSubmit(e)
+                    audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
+                }}
             >
                 <div className="">
                     <label htmlFor="session_length" className="">

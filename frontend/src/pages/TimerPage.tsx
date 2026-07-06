@@ -1,4 +1,3 @@
-import { useState } from "react";
 import SessionConfig from "../components/SessionConfig";
 import Timer from "../components/Timer";
 import type { SessionResponse, SessionSchedule } from "../types/session";
@@ -6,24 +5,20 @@ import { useAuth } from "../hooks/useAuth";
 import { markCompleted } from "../services/session";
 import Card from "../components/Card";
 import { useTimer } from "../hooks/useTimer";
+import { useOutletContext } from "react-router-dom";
 
 const TimerPage = () => {
     const { isAuthenticated } = useAuth()
-    const { sessionInfo, setSessionInfo, startTimeRef, accumulatedBeforeRef, isPausedRef, elapsedTimeRef } = useTimer()
-    const [completedResponse, setCompletedResponse] = useState<SessionResponse | null>(null)
-
+    const { sessionInfo, setSessionInfo, startTimeRef} = useTimer()
+    const { audioRef, setIsPlaying } = useOutletContext<{audioRef: React.RefObject<HTMLAudioElement | null>; setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>}>()
     const handleOnSessionStart = (data: SessionSchedule | SessionResponse) => {
         setSessionInfo(data)
         startTimeRef.current = Date.now()
-        accumulatedBeforeRef.current = 0
-        isPausedRef.current = false
-        elapsedTimeRef.current = 0
     }
 
     const handleOnComplete = async () => {
         if (isAuthenticated && sessionInfo && 'id' in sessionInfo){
-            const completedResponse = await markCompleted(sessionInfo.id, {status: "completed"})
-            setCompletedResponse(completedResponse)
+            await markCompleted(sessionInfo.id, {status: "completed"})
         }
     }
 
@@ -36,9 +31,8 @@ const TimerPage = () => {
                 <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
             
             :
-                <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated}/>
+                <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated} audioRef={audioRef} setIsPlaying={setIsPlaying}/>
             }
-            {completedResponse && <div>Congratulation</div>}
         </Card>
     </div>
     </>

@@ -52,7 +52,7 @@ const Layout = () => {
             </div>
 
             <main className="flex-1 h-full relative z-10">
-                <Outlet />
+                <Outlet context={{ audioRef, setIsPlaying }}/>
             </main>
         </div>
     )
