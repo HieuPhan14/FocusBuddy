@@ -9,23 +9,26 @@ import SignUpPage from "./pages/SignUpPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Layout from "./components/Layout";
+import TimerProvider from "./context/TimerContext";
 
 export default function App() {
     return (
         <BrowserRouter>
-            <AuthProvider>
-                <Routes>
-                    <Route path="/" element={<Layout />}>
-                        <Route index element={<TimerPage />}/>
-                        <Route path="stats" element={<ProtectedRoute><StatPage /></ProtectedRoute>}/>
-                        <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
-                        <Route path="login" element={<LoginPage />}></Route>
-                        <Route path="signup" element={<SignUpPage />}></Route>
-                        <Route path="forgot-password" element={<ForgotPassword />}></Route>
-                        <Route path="reset-password" element={<ResetPassword />}></Route>
-                    </Route>
-                </Routes>
-            </AuthProvider>
+            <TimerProvider>
+                <AuthProvider>
+                    <Routes>
+                        <Route path="/" element={<Layout />}>
+                            <Route index element={<TimerPage />}/>
+                            <Route path="stats" element={<ProtectedRoute><StatPage /></ProtectedRoute>}/>
+                            <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
+                            <Route path="login" element={<LoginPage />}></Route>
+                            <Route path="signup" element={<SignUpPage />}></Route>
+                            <Route path="forgot-password" element={<ForgotPassword />}></Route>
+                            <Route path="reset-password" element={<ResetPassword />}></Route>
+                        </Route>
+                    </Routes>
+                </AuthProvider>
+            </TimerProvider>
         </BrowserRouter>
     )
 }

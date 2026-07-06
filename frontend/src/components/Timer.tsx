@@ -4,6 +4,7 @@ import {handlePhase, formatTime} from "../lib/timer";
 import type { PhaseInfo } from "../lib/timer";
 import React from "react";
 import clsx from "clsx"
+import { useTimer } from "../hooks/useTimer";
 
 interface TimerProps {
     session: SessionSchedule
@@ -11,15 +12,11 @@ interface TimerProps {
 }
 
 const Timer = ( {session, handleComplete}: TimerProps ) => {
-    const startTimeRef = useRef<number>(0)
-    const elapsedTimeRef = useRef<number>(0)
-    const isPausedRef = useRef<boolean>(false)
-    const accumulatedBeforeRef = useRef<number>(0)
+    const { startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef} = useTimer()
 
-    const scrollRef = useRef<HTMLDivElement>(null)
-
-    const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
     const [isCompleted, setIsCompleted] = useState<boolean>(false)
+    const scrollRef = useRef<HTMLDivElement>(null)
+    const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
 
     const handleScrollCycle = ():void => {
@@ -31,26 +28,32 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     }   
 
     useEffect(() => {
-        startTimeRef.current = Date.now()
+        const phaseInfo = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
+        setDisplayInfo(phaseInfo)
+
         const id = setInterval(() => {
-            if (!isPausedRef.current) {
+            if(!isPausedRef.current){
                 elapsedTimeRef.current = Math.min(
-                    accumulatedBeforeRef.current + (Date.now() - startTimeRef.current) / 1000, 
-                    total_session_planned)
-            
+                    accumulatedBeforeRef.current + (Date.now() - startTimeRef.current) /1000,
+                    total_session_planned
+                )
+
                 if (elapsedTimeRef.current >= total_session_planned){
                     setIsCompleted(true)
                     clearInterval(id)
     
                 } else {
-                    const phase_info = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
-                    setDisplayInfo(phase_info)
-                } 
+                    const phaseInfo = handlePhase(total_session_planned, elapsedTimeRef.current, session.schedule)
+                    setDisplayInfo(phaseInfo)
+                }
             }
+
         }, 250)
 
-        return () => clearInterval(id)
-    }, [session.schedule, total_session_planned]);
+        return () => {
+            clearInterval(id)
+        }
+    }, [session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef]);
 
     useEffect(() => {
         handleScrollCycle()
