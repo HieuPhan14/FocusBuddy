@@ -46,7 +46,7 @@ const Layout = () => {
             <audio ref={audioRef} src="/audio/background_music.mp3" loop/>
             <Background theme={theme}/>
 
-            <div className="relative z-10">
+            <div className="relative z-20">
                 <NavBar themeOption={handleTheme} theme={theme} 
                         toggleMusic={toggleMusic} isPlaying={isPlaying} volume={volume} handleVolume={handleVolume}/>
             </div>

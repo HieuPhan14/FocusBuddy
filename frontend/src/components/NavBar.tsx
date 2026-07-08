@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { BackgroundTheme } from "./Layout";
+import PixelIcon from "./PixelIcon";
+import { useEffect, useRef, useState } from "react";
 
 interface NavBarProps {
     themeOption: (value: BackgroundTheme) => void
@@ -13,59 +15,107 @@ interface NavBarProps {
 
 const NavBar = ({ themeOption, theme, toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) => {
     const {isAuthenticated} = useAuth()
+    const lightMode = theme === "night" ? "dark" : "light"
+    const [isVolumeOpen, setIsVolumeOpen] = useState<boolean>(false)
+    const popoverRef = useRef<HTMLDivElement>(null)
+
     const themeSelect = (
-        <select
-            value={theme}
-            onChange={(e) => {
-                themeOption(e.target.value as BackgroundTheme)
-            }}
-        >
-            <option value="summer">Summer</option>
-            <option value="beach">Beach</option>
-            <option value="night">Night</option>
-        </select>
+        <div className="relative">
+            <select
+                value={theme}
+                className="[appearance:none] border-2 border-transparent hover:border-border transition hover:bg-input rounded-sm px-2 py-1 text-text pr-6"
+                onChange={(e) => {
+                    themeOption(e.target.value as BackgroundTheme)
+                }}
+            >
+                <option value="summer">Summer</option>
+                <option value="beach">Beach</option>
+                <option value="night">Night</option>
+            </select>
+
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+            </div>
+        </div>
     )
 
+    const volumeAdjust = () => {
+        setIsVolumeOpen(!isVolumeOpen)
+    }
+    
+    useEffect(() => {
+        if (!isVolumeOpen) return
+        const handleClickOutside = (e: MouseEvent) => {
+            if (popoverRef.current && !popoverRef.current.contains(e.target as Node)){
+                setIsVolumeOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [isVolumeOpen])
+    
     return (
     <>
-        <div className="flex">
-            {!isAuthenticated 
-                ?
-                <div className="flex">
-                    <Link to="/">Timer</Link>
-                    <Link to="/login">Log in</Link>
-                    <Link to="/signup">Sign up</Link>
-                </div>
+        <div className="flex bg-surface border-b-4 border-border font-display items-center justify-between px-6 py-1">
+            <div className="flex items-center gap-6">
+                <div className="text-xl text-accent tracking-wide">Focus Buddy</div>
 
-                :
-                <div className="flex">
-                    <Link to="/">Timer</Link>
-                    <Link to="/stats">Stats</Link>
-                    <Link to="/profile">Profile</Link>
-                </div>
-            }
-            {themeSelect}
-            
-            <div className="group relative flex items-center">
-                <button
-                    className=""
-                    onClick={toggleMusic}
-                >
-                    {isPlaying
-                        ? <div>Mute Music </div>
-                        : <div>Play Music</div>
+                <div className="flex items-center gap-4 text-text">
+                    <NavLink to="/" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Timer</NavLink>
+                    {!isAuthenticated 
+                        ?
+                        <>
+                            <NavLink to="/login" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Log in</NavLink>
+                            <NavLink to="/signup" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Sign up</NavLink>
+                        </>
+
+                        :
+                        <>
+                            <NavLink to="/stats" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Stats</NavLink>
+                            <NavLink to="/profile" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Profile</NavLink>
+                        </>
                     }
-                </button>
+                </div>
+            </div>
+            
+            <div className="flex items-center gap-3">
+                <div 
+                    className="group relative flex items-center rounded-sm border-2 border-transparent hover:border-border transition"
+                    ref={popoverRef}
+                >
+                    <button
+                        className="px-2 py-1 group-hover:border-r-2 group-hover:border-border transition hover:bg-input"
+                        onClick={toggleMusic}
+                    >
+                        {isPlaying 
+                            ? <PixelIcon name="Speaker-Crossed" variant={lightMode}/> 
+                            : <PixelIcon name="Speaker-0" variant={lightMode}/> 
+                        }
+                    </button>
+                        
+                    <button
+                        className="px-1 py-1 flex items-center justify-center hover:bg-input [align-self:stretch]"
+                        onClick={volumeAdjust}
+                    >
+                        <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+                    </button> 
 
-                <input 
-                    className="hidden group-hover:block"
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.05}
-                    value={volume}
-                    onChange={(e) => handleVolume(Number(e.target.value))}
-                />
+                    {isVolumeOpen && 
+                        <input 
+                            className="absolute top-full -left-3 mt-3 accent-accent"
+                            type="range"
+                            min={0}
+                            max={1}
+                            step={0.05}
+                            value={volume}
+                            onChange={(e) => handleVolume(Number(e.target.value))}
+                        />
+                    }
+                </div>
+
+
+                {themeSelect}
             </div>
 
             

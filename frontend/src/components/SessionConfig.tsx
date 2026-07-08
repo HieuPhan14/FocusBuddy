@@ -2,6 +2,7 @@ import React, { useState }  from "react";
 import getErrorMessage from "../utils/errorUtils";
 import type { SessionCreate, SessionResponse, SessionSchedule } from "../types/session"
 import {createSession} from "../services/session";
+import PixelIcon from "./PixelIcon";
 
 type SessionMode = "light" | "normal" | "custom" | "intense"
 
@@ -52,14 +53,14 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
         return true
     }
 
-    const handleSubmit = async (e: React.SyntheticEvent) => {
+    const handleSubmit = async (e: React.SyntheticEvent): Promise<boolean> => {
         e.preventDefault()
 
         if (!sessionValidation(Number(sessionLength))) 
-            return
+            return false
 
         if (mode === "custom" && !customValidation(Number(cycleFocusTime)*60, Number(cycleBreakTime)*60))
-            return
+            return false
 
         try{
             setIsLoading(true)
@@ -72,8 +73,12 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
 
             const response = await createSession(session, isAuth)
             sessionStart(response)
+            return true
+
         } catch (error){
             setError(getErrorMessage(error))
+            return false
+
         } finally {
             setIsLoading(false)
         }
@@ -82,45 +87,58 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
     return (
     <>
         {isLoading ? <p>Loading</p> :
+        <>
             <form
-                className=""
-                onSubmit={(e) => {
-                    handleSubmit(e)
-                    audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
+                className="flex flex-col gap-4 m-2"
+                onSubmit={async (e) => {
+                    const success = await handleSubmit(e)
+                    if (success){
+                        audioRef.current?.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
+                    }
                 }}
             >
-                <div className="">
-                    <label htmlFor="session_length" className="">
+                <h1 className="text-center text-2xl font-display text-text my-1">Create Session</h1>
+
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="session_length" className="font-display text-text text-lg">
                         Session Length 
                     </label>
 
-                    <select
-                        id="session_length"
-                        value={selectedOption}
-                        onChange={(e) => {
-                            setError(null)
-                            setSelectedOption(e.target.value)
-                            if (e.target.value != "custom"){
-                                setSessionLength(e.target.value)
-                            } else {
-                                setSessionLength("0")
-                            }
-                        }}
-                    >
-                        <option value="1500">25 minutes</option>
-                        <option value="3000">50 minutes</option>
-                        <option value="3600">1 hour</option>
-                        <option value="7200">2 hours</option>
-                        <option value="14400">4 hours</option>
-                        <option value="28800">8 hours</option>
-                        <option value="custom">Custom</option>
-                    </select>
+                    <div className="relative">
+                        <select
+                            className="pr-6 text-text pl-2 w-full bg-input border-2 border-border-light rounded-md font-body [appearance:none]"
+                            id="session_length"
+                            value={selectedOption}
+                            onChange={(e) => {
+                                setError(null)
+                                setSelectedOption(e.target.value)
+                                if (e.target.value != "custom"){
+                                    setSessionLength(e.target.value)
+                                } else {
+                                    setSessionLength("0")
+                                }
+                            }}
+                        >
+                            <option value="1500">25 minutes</option>
+                            <option value="3000">50 minutes</option>
+                            <option value="3600">1 hour</option>
+                            <option value="7200">2 hours</option>
+                            <option value="14400">4 hours</option>
+                            <option value="28800">8 hours</option>
+                            <option value="custom">Custom</option>
+                        </select>
+
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <PixelIcon name="Chevron-Arrow-Down" variant={"light"} size="w-2 h-[5px]"/>
+                        </div>
+                    </div>
 
                     {selectedOption === "custom" && 
-                        <div>
+                    <div className="flex gap-2 inner-panel-row">
+                        <div className="flex gap-2">
                             <input 
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
                                 id="hours"
-                                className=""
                                 type="number"
                                 min={0}
                                 max={9}
@@ -132,13 +150,15 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                                     setSessionLength(String(newHour + Number(customSessionMinute) * 60))
                                 }}
                             />
-                            <label htmlFor="hours" className="">
+                            <label htmlFor="hours" className="font-display text-text">
                                 hour(s) 
                             </label>
+                        </div>
 
+                        <div className="flex gap-2">
                             <input 
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
                                 id="minutes"
-                                className=""
                                 type="number"
                                 min={0}
                                 max={59}
@@ -150,76 +170,87 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                                     setSessionLength(String(newMinute + Number(customSessionHour) * 3600))
                                 }}
                             />
-                            <label htmlFor="minutes" className="">
+                            <label htmlFor="minutes" className="font-display text-text">
                                 minute(s) 
                             </label>
                         </div>
+                    </div>
+                    
                     }
                 </div>
 
-                <div className="">
-                    <label htmlFor="mode" className="">
+                <div className="flex flex-col gap-1">
+                    <label htmlFor="mode" className="font-display text-text text-lg">
                         Focus mode
                     </label>
-                    <select
-                        id="mode"
-                        value={mode}
-                        onChange={(e) => setMode(e.target.value as SessionMode)}
-                    >
-                        <option value="light">Light Mode</option>
-                        <option value="normal">Normal Mode</option>
-                        <option value="intense">Intense Mode</option>
-                        <option value="custom">Custom Mode</option>
-                    </select>
-                </div>
 
-                {mode === "custom" &&
-                    <>
-                        <div className="flex">
-                            <label htmlFor="cycle_focus" className="">
+                    <div className="relative">
+                        <select
+                            className="pr-6 text-text pl-2 w-full bg-input border-2 border-border-light rounded-md font-body [appearance:none]"
+                            id="mode"
+                            value={mode}
+                            onChange={(e) => setMode(e.target.value as SessionMode)}
+                        >
+                            <option value="light">Light Mode</option>
+                            <option value="normal">Normal Mode</option>
+                            <option value="intense">Intense Mode</option>
+                            <option value="custom">Custom Mode</option>
+                        </select>
+
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <PixelIcon name="Chevron-Arrow-Down" variant={"light"} size="w-2 h-[5px]"/>
+                        </div>
+                    </div>
+
+                    {mode === "custom" &&
+                    <div className="inner-panel-row">
+                        <div className="flex gap-2">
+                            <label htmlFor="cycle_focus" className="font-display text-text">
                                 Focus time in a cycle
                             </label>
                             <input 
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
                                 id="cycle_focus"
-                                className=""
                                 type="number"
                                 min={10}
                                 max={180}
                                 value={cycleFocusTime}
                                 onChange={(e) => setCycleFocusTime(e.target.value)}
                                 required
-                            />
-                            <div>minute(s)</div>
+                                />
+                            <div className="font-display text-text">minute(s)</div>
                         </div>
 
-                        <div className="flex">
-                            <label htmlFor="cycle_break" className="">
+                        <div className="flex gap-2">
+                            <label htmlFor="cycle_break" className="font-display text-text">
                                 Break time in a cycle
                             </label>
                             <input 
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
                                 id="cycle_break"
-                                className=""
                                 type="number"
                                 min={1}
                                 max={60}
                                 value={cycleBreakTime}
                                 onChange={(e) => setCycleBreakTime(e.target.value)}
                                 required
-                            />
-                            <div>minute(s)</div>
+                                />
+                            <div className="font-display text-text">minute(s)</div>
                         </div>
-                    </>
-                }
+                    </div>
+                    }
+                </div>
 
-                {error && <p>{error}</p>}
+                {error && <div className="text-error font-body inner-panel-row mt-3">{error}</div>}
 
                 <button 
                     type="submit"
-                    className="border border-red-400"
+                    className="btn-primary mt-2"
                     disabled={isLoading}
                     >Let's Lock In
                 </button>
             </form>
+        </>
         }
     </>
     );

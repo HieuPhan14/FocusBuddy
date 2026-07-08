@@ -26,6 +26,7 @@
   /* Text */
   --color-text: #4a3f35;              /* warm dark brown (cozier than blue-charcoal) */
   --color-muted: #8a7d6b;             /* soft warm grey-brown */
+  --color-error: #b8483f;
 
   /* Accent — the warm pop */
   --color-accent: #e8a04c;            /* honey-gold */
@@ -38,6 +39,10 @@
   /* The chunky pixel border — this is what sells the retro feel */
   --color-border: #7a6a52;            /* warm dark brown, chunky */
   --color-border-light: #b5a17f;      /* lighter brown for inner/subtle borders */
+
+  --font-display: "Pixelify Sans", sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+  
 }
 
 .theme-night {
@@ -45,8 +50,30 @@
   --color-surface-alt: #33334a;
   --color-input: #3a3a52;
   --color-text: #e8e4d8;            /* warm cream text */
+  --color-error: #e2726a;
   --color-muted: #a09a8c;
   --color-border: #4a4a63;
   --color-border-light: #5a5a75;
   /* accent gold + primary sage stay — they pop on dark too */
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+  }
+}
+
+.btn-primary {
+  @apply bg-accent hover:bg-accent-hover text-lg text-surface font-display px-4 py-2 rounded-md border-2 border-border transition
+}
+
+.btn-secondary {
+  @apply bg-primary hover:bg-primary-hover text-surface font-display px-4 py-2 rounded-md border-2 border-border transition
+}
+
+.inner-panel-row {
+  @apply bg-surface-alt border-2 border-border-light rounded-sm p-3
 }
