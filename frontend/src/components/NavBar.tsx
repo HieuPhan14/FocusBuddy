@@ -1,21 +1,21 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import type { BackgroundTheme } from "./Layout";
 import PixelIcon from "./PixelIcon";
 import { useEffect, useRef, useState } from "react";
+import { useTheme } from "../hooks/useTheme";
+import type { BackgroundTheme } from "../context/ThemeContext";
 
 interface NavBarProps {
-    themeOption: (value: BackgroundTheme) => void
-    theme: BackgroundTheme
     toggleMusic: () => void
     isPlaying: boolean
     volume: number
     handleVolume: (value: number) => void
 }
 
-const NavBar = ({ themeOption, theme, toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) => {
+const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) => {
+    const { theme, handleTheme, lightMode } = useTheme()
+
     const {isAuthenticated} = useAuth()
-    const lightMode = theme === "night" ? "dark" : "light"
     const [isVolumeOpen, setIsVolumeOpen] = useState<boolean>(false)
     const popoverRef = useRef<HTMLDivElement>(null)
 
@@ -25,7 +25,7 @@ const NavBar = ({ themeOption, theme, toggleMusic, isPlaying, volume, handleVolu
                 value={theme}
                 className="[appearance:none] border-2 border-transparent hover:border-border transition hover:bg-input rounded-sm px-2 py-1 text-text pr-6"
                 onChange={(e) => {
-                    themeOption(e.target.value as BackgroundTheme)
+                    handleTheme(e.target.value as BackgroundTheme)
                 }}
             >
                 <option value="summer">Summer</option>
@@ -56,7 +56,6 @@ const NavBar = ({ themeOption, theme, toggleMusic, isPlaying, volume, handleVolu
     }, [isVolumeOpen])
     
     return (
-    <>
         <div className="flex bg-surface border-b-4 border-border font-display items-center justify-between px-6 py-1">
             <div className="flex items-center gap-6">
                 <div className="text-xl text-accent tracking-wide">Focus Buddy</div>
@@ -120,7 +119,6 @@ const NavBar = ({ themeOption, theme, toggleMusic, isPlaying, volume, handleVolu
 
             
         </div>
-    </>
     )
 }
 

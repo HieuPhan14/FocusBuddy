@@ -1,14 +1,12 @@
-import type { BackgroundTheme } from "./Layout";
+import { useTheme } from "../hooks/useTheme";
 
-interface BackgroundProps {
-    theme: BackgroundTheme
-}
+const Background = () => {
+    const { theme } = useTheme()
 
-const Background = ( { theme }: BackgroundProps) => {
     return (
     <>
         {theme === "summer" && (
-            <div className="absolute inset-0 overflow-hidden">
+            <div className="fixed inset-0 overflow-hidden">
                 <div>
                     <img
                         alt="" 
@@ -54,7 +52,7 @@ const Background = ( { theme }: BackgroundProps) => {
         )}
 
         {theme === "beach" && (
-            <div className="absolute inset-0 overflow-hidden">
+            <div className="fixed inset-0 overflow-hidden">
                 <div>
                     <img 
                         alt=""
@@ -121,7 +119,7 @@ const Background = ( { theme }: BackgroundProps) => {
         )}
     
         {theme === "night" && (
-            <div className="absolute inset-0 overflow-hidden">
+            <div className="fixed inset-0 overflow-hidden">
                 <div>
                     <img 
                         alt=""

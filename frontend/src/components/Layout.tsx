@@ -3,23 +3,16 @@ import Background from "./Background";
 import NavBar from "./NavBar"
 import { Outlet } from "react-router-dom";
 import clsx from "clsx";
-
-export type BackgroundTheme = "summer" | "night" | "beach"
+import { useTheme } from "../hooks/useTheme";
 
 const Layout = () => {
-    const [theme, setTheme] = useState<BackgroundTheme>(() => (localStorage.getItem("theme") as BackgroundTheme) ?? "summer")
-    
+    const { theme } = useTheme()
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
     const [volume, setVolume] = useState<number>(() => {
         const stored = localStorage.getItem("volume")
         return stored ? Number(stored) : 0.5
     }) 
-
-    const handleTheme = (value: BackgroundTheme) => {
-        setTheme(value)
-        localStorage.setItem("theme", value)
-    }
 
     const toggleMusic = () => {
         if (!isPlaying){
@@ -44,11 +37,10 @@ const Layout = () => {
     return (
         <div className={clsx("flex flex-col h-screen relative", theme === "night" ? "theme-night" : "")}>
             <audio ref={audioRef} src="/audio/background_music.mp3" loop/>
-            <Background theme={theme}/>
+            <Background />
 
             <div className="relative z-20">
-                <NavBar themeOption={handleTheme} theme={theme} 
-                        toggleMusic={toggleMusic} isPlaying={isPlaying} volume={volume} handleVolume={handleVolume}/>
+                <NavBar toggleMusic={toggleMusic} isPlaying={isPlaying} volume={volume} handleVolume={handleVolume}/>
             </div>
 
             <main className="flex-1 h-full relative z-10">

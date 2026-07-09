@@ -3,8 +3,11 @@ import getErrorMessage from "../utils/errorUtils";
 import type { SessionCreate, SessionResponse, SessionSchedule } from "../types/session"
 import {createSession} from "../services/session";
 import PixelIcon from "./PixelIcon";
+import { useTheme } from "../hooks/useTheme";
+import InfoTooltip from "./InfoTooltip";
+import modeInfo from "../lib/modeInfo";
 
-type SessionMode = "light" | "normal" | "custom" | "intense"
+export type SessionMode = "light" | "normal" | "custom" | "intense"
 
 interface SessionStartProps {
     sessionStart: (data: SessionSchedule | SessionResponse) => void
@@ -14,6 +17,8 @@ interface SessionStartProps {
 }
 
 const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: SessionStartProps ) => {
+    const { lightMode } = useTheme()
+
     const [sessionLength, setSessionLength] = useState<string>("3600")
     const [mode, setMode] = useState<SessionMode>("light")
     const [cycleFocusTime, setCycleFocusTime] = useState<string>("")
@@ -106,7 +111,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
 
                     <div className="relative">
                         <select
-                            className="pr-6 text-text pl-2 w-full bg-input border-2 border-border-light rounded-md font-body [appearance:none]"
+                            className="pr-6 text-text pl-2 w-full bg-input border-2 border-border-light rounded-md body-text [appearance:none]"
                             id="session_length"
                             value={selectedOption}
                             onChange={(e) => {
@@ -129,7 +134,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                         </select>
 
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                            <PixelIcon name="Chevron-Arrow-Down" variant={"light"} size="w-2 h-[5px]"/>
+                            <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
                         </div>
                     </div>
 
@@ -137,7 +142,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                     <div className="flex gap-2 inner-panel-row">
                         <div className="flex gap-2">
                             <input 
-                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md body-text"
                                 id="hours"
                                 type="number"
                                 min={0}
@@ -157,7 +162,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
 
                         <div className="flex gap-2">
                             <input 
-                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md body-text"
                                 id="minutes"
                                 type="number"
                                 min={0}
@@ -179,29 +184,44 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                     }
                 </div>
 
-                <div className="flex flex-col gap-1">
-                    <label htmlFor="mode" className="font-display text-text text-lg">
-                        Focus mode
-                    </label>
+                <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
+                        <label htmlFor="mode" className="font-display text-text text-lg">
+                            Focus mode
+                        </label>
 
-                    <div className="relative">
-                        <select
-                            className="pr-6 text-text pl-2 w-full bg-input border-2 border-border-light rounded-md font-body [appearance:none]"
-                            id="mode"
-                            value={mode}
-                            onChange={(e) => setMode(e.target.value as SessionMode)}
-                        >
-                            <option value="light">Light Mode</option>
-                            <option value="normal">Normal Mode</option>
-                            <option value="intense">Intense Mode</option>
-                            <option value="custom">Custom Mode</option>
-                        </select>
+                        <div className="relative">
+                            <select
+                                className="pr-6 text-text pl-2 w-full bg-input border-2 border-border-light rounded-md body-text [appearance:none]"
+                                id="mode"
+                                value={mode}
+                                onChange={(e) => setMode(e.target.value as SessionMode)}
+                            >
+                                <option value="light">Light Mode</option>
+                                <option value="normal">Normal Mode</option>
+                                <option value="intense">Intense Mode</option>
+                                <option value="custom">Custom Mode</option>
+                            </select>
 
-                        <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                            <PixelIcon name="Chevron-Arrow-Down" variant={"light"} size="w-2 h-[5px]"/>
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                                <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+                            </div>
                         </div>
                     </div>
 
+                    <div className="text-text body-text inner-panel-row">
+
+                        <div className="flex items-center justify-between mb-1">
+                            {modeInfo[mode].title}
+                            <InfoTooltip 
+                                trigger={<PixelIcon name="Info" variant={lightMode} size="w-2 h-4 inline align-baseline" />}
+                                children={modeInfo[mode].detail}
+                            />
+                        </div>
+
+                        <p className="body-text text-sm text-text">{modeInfo[mode].summary}</p>
+                    </div>
+                    
                     {mode === "custom" &&
                     <div className="inner-panel-row">
                         <div className="flex gap-2">
@@ -209,7 +229,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                                 Focus time in a cycle
                             </label>
                             <input 
-                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md body-text"
                                 id="cycle_focus"
                                 type="number"
                                 min={10}
@@ -226,7 +246,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                                 Break time in a cycle
                             </label>
                             <input 
-                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md font-body"
+                                className="text-text w-14 text-center bg-input border-2 border-border-light rounded-md body-text"
                                 id="cycle_break"
                                 type="number"
                                 min={1}
@@ -241,7 +261,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                     }
                 </div>
 
-                {error && <div className="text-error font-body inner-panel-row mt-3">{error}</div>}
+                {error && <div className="text-error body-text inner-panel-row mt-3">{error}</div>}
 
                 <button 
                     type="submit"

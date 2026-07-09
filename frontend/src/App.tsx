@@ -10,25 +10,28 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Layout from "./components/Layout";
 import TimerProvider from "./context/TimerContext";
+import ThemeProvider from "./context/ThemeContext";
 
 export default function App() {
     return (
         <BrowserRouter>
-            <TimerProvider>
-                <AuthProvider>
-                    <Routes>
-                        <Route path="/" element={<Layout />}>
-                            <Route index element={<TimerPage />}/>
-                            <Route path="stats" element={<ProtectedRoute><StatPage /></ProtectedRoute>}/>
-                            <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
-                            <Route path="login" element={<LoginPage />}></Route>
-                            <Route path="signup" element={<SignUpPage />}></Route>
-                            <Route path="forgot-password" element={<ForgotPassword />}></Route>
-                            <Route path="reset-password" element={<ResetPassword />}></Route>
-                        </Route>
-                    </Routes>
-                </AuthProvider>
-            </TimerProvider>
+            <ThemeProvider>
+                <TimerProvider>
+                    <AuthProvider>
+                        <Routes>
+                            <Route path="/" element={<Layout />}>
+                                <Route index element={<TimerPage />}/>
+                                <Route path="stats" element={<ProtectedRoute><StatPage /></ProtectedRoute>}/>
+                                <Route path="profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
+                                <Route path="login" element={<LoginPage />}></Route>
+                                <Route path="signup" element={<SignUpPage />}></Route>
+                                <Route path="forgot-password" element={<ForgotPassword />}></Route>
+                                <Route path="reset-password" element={<ResetPassword />}></Route>
+                            </Route>
+                        </Routes>
+                    </AuthProvider>
+                </TimerProvider>
+            </ThemeProvider>
         </BrowserRouter>
     )
 }

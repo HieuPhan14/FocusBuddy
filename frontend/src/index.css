@@ -42,7 +42,6 @@
 
   --font-display: "Pixelify Sans", sans-serif;
   --font-body: "Nunito", system-ui, sans-serif;
-  
 }
 
 .theme-night {
@@ -61,9 +60,6 @@
   body {
     font-family: var(--font-body);
   }
-  h1, h2, h3 {
-    font-family: var(--font-display);
-  }
 }
 
 .btn-primary {
@@ -76,4 +72,8 @@
 
 .inner-panel-row {
   @apply bg-surface-alt border-2 border-border-light rounded-sm p-3
+}
+
+.body-text {
+  @apply font-body font-medium
 }
