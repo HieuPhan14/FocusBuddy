@@ -21,7 +21,7 @@ const modeInfo: Record<SessionMode, ModeInfo> = {
                     break to recharge before the next cycle.
                 </p>
 
-                <p>Based on ultradian rhythm research (Kleitman) and studies of expert practice 
+                <p className="mb-4">Based on ultradian rhythm research (Kleitman) and studies of expert practice 
                     (Ericssion et al., 1993).
                 </p>
                 
@@ -45,7 +45,7 @@ const modeInfo: Record<SessionMode, ModeInfo> = {
                     by a ~17-minute break - enough to recover without losing momentum.
                 </p>
 
-                <p>Based on the DeskTime workplace data analysis (2014).
+                <p className="mb-4">Based on the DeskTime workplace data analysis (2014).
                 </p>
                 
                 <p>The DeskTime/Draugiem Group productivity analysis (2014) - the widely-cited source of the 52/17 finding.
@@ -67,7 +67,7 @@ const modeInfo: Record<SessionMode, ModeInfo> = {
                     energy steady - with a longer break every 4th round for deeper rest.
                 </p>
 
-                <p>The Pomodoro Technique (Cirillo), supported by micro-break research (Albulescu et al., 2022).
+                <p className="mb-4">The Pomodoro Technique (Cirillo), supported by micro-break research (Albulescu et al., 2022).
                 </p>
                 
                 <p>The Pomodoro Technique — Francesco Cirillo (technique, not a study). Supported by micro-break recovery research: Albulescu, P., Macsinga, I., Rusu,
@@ -90,7 +90,7 @@ const modeInfo: Record<SessionMode, ModeInfo> = {
                     the preset.
                 </p>
 
-                <p>Principle 1: Breaks should be ~20-25% of total session time (ratio principle, DeskTime).
+                <p className="mb-4">Principle 1: Breaks should be ~20-25% of total session time (ratio principle, DeskTime).
                 </p>
 
                 <p>Principle 2: Long focus stretches need breaks over ~10 minutes to fully recover (recovery-threshold principle, Albulescu 2022).

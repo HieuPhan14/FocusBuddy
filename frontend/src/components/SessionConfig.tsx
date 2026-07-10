@@ -3,7 +3,6 @@ import getErrorMessage from "../utils/errorUtils";
 import type { SessionCreate, SessionResponse, SessionSchedule } from "../types/session"
 import {createSession} from "../services/session";
 import PixelIcon from "./PixelIcon";
-import { useTheme } from "../hooks/useTheme";
 import InfoTooltip from "./InfoTooltip";
 import modeInfo from "../lib/modeInfo";
 
@@ -17,8 +16,6 @@ interface SessionStartProps {
 }
 
 const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: SessionStartProps ) => {
-    const { lightMode } = useTheme()
-
     const [sessionLength, setSessionLength] = useState<string>("3600")
     const [mode, setMode] = useState<SessionMode>("light")
     const [cycleFocusTime, setCycleFocusTime] = useState<string>("")
@@ -134,7 +131,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                         </select>
 
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                            <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+                            <PixelIcon name="Chevron-Arrow-Down" size="w-2 h-[5px]"/>
                         </div>
                     </div>
 
@@ -204,7 +201,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                             </select>
 
                             <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                                <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+                                <PixelIcon name="Chevron-Arrow-Down" size="w-2 h-[5px]"/>
                             </div>
                         </div>
                     </div>
@@ -214,7 +211,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                         <div className="flex items-center justify-between mb-1">
                             {modeInfo[mode].title}
                             <InfoTooltip 
-                                trigger={<PixelIcon name="Info" variant={lightMode} size="w-2 h-4 inline align-baseline" />}
+                                trigger={<PixelIcon name="Info" size="w-2 h-4 inline align-baseline" />}
                                 children={modeInfo[mode].detail}
                             />
                         </div>

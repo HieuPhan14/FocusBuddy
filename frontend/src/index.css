@@ -42,6 +42,7 @@
 
   --font-display: "Pixelify Sans", sans-serif;
   --font-body: "Nunito", system-ui, sans-serif;
+  --font-number: "VT323", monospace;
 }
 
 .theme-night {
@@ -71,9 +72,12 @@
 }
 
 .inner-panel-row {
-  @apply bg-surface-alt border-2 border-border-light rounded-sm p-3
+  @apply bg-surface-alt border-2 border-border-light rounded-sm p-3 shadow-[2px_2px_0_rgba(74,63,53,0.35)]
 }
 
 .body-text {
   @apply font-body font-medium
 }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }

@@ -49,12 +49,91 @@ const formatTime = (seconds: number):string => {
         return `${seconds}s`
     } else if (seconds < 3600) {
         const minutes = Math.floor(seconds/60)
-        return `${minutes}m${seconds%60}s`
+
+        if (seconds%60 == 0)
+            return `${minutes}m`
+        else if (seconds%60 < 10)
+            return `${minutes}m0${seconds%60}s`
+        else return `${minutes}m${seconds%60}s`
+
     } else {
         const hours = Math.floor(seconds/3600)
         const minutes = Math.floor((seconds%3600)/60)
-        return `${hours}h${minutes}m${seconds%60}s`
+
+        if (minutes == 0){
+            return `${hours}h`
+        }
+        else if (minutes < 10){
+            if (seconds%60 == 0)
+                return `${hours}h0${minutes}m`
+            else if (seconds%60 < 10)
+                return `${hours}h0${minutes}m0${seconds%60}s`
+            else if (seconds%60 < 60)
+                return `${hours}h0${minutes}m${seconds%60}s`
+        } 
+        else {
+            if (seconds%60 == 0)
+                return `${hours}h${minutes}m`
+            else if (seconds%60 < 10)
+                return `${hours}h${minutes}m0${seconds%60}s`
+            else if (seconds%60 < 60)
+                return `${hours}h${minutes}m${seconds%60}s`
+        }
     }
+    return ""
 }
 
-export { handlePhase, formatTime };
+const formatTimeRemaining = (seconds: number):string => {
+    seconds = Math.floor(seconds)
+
+    if (seconds < 10){
+        return `00:0${seconds}`
+    } 
+    else if (seconds < 60){
+        return `00:${seconds}`
+    }
+    else if (seconds < 3600) {
+        const minutes = Math.floor(seconds/60)
+
+        if (minutes < 10){
+            if (seconds%60 < 10){
+                return `0${minutes}:0${seconds%60}`
+            } else {
+                return `0${minutes}:${seconds%60}`
+            }
+        } else {
+            if (seconds%60 < 10){
+                return `${minutes}:0${seconds%60}`
+            } else {
+                return `${minutes}:${seconds%60}`
+            }
+        }
+    } else {
+        const hours = Math.floor(seconds/3600)
+        const minutes = Math.floor((seconds%3600)/60)
+
+        if (minutes == 0){
+            if (seconds%60 < 10)
+                return `${hours}:00:0${seconds%60}`
+            else if (seconds%60 < 60)
+                return `${hours}:00:${seconds%60}`
+        }
+        else if (minutes < 10){
+            if (seconds%60 < 10)
+                return `${hours}:0${minutes}:0${seconds%60}`
+            else if (seconds%60 < 60)
+                return `${hours}:0${minutes}:${seconds%60}`
+        } 
+        else {
+            if (seconds%60 == 0)
+                return `${hours}:${minutes}:00`
+            else if (seconds%60 < 10)
+                return `${hours}:${minutes}:0${seconds%60}`
+            else if (seconds%60 < 60)
+                return `${hours}:${minutes}:${seconds%60}`
+        }
+    }
+    return ""
+}
+
+export { handlePhase, formatTime, formatTimeRemaining };

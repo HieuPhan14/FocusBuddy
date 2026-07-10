@@ -22,13 +22,28 @@ const TimerPage = () => {
         }
     }
 
+    const fakeSession: SessionSchedule = {
+      schedule: [
+          [8, 25],
+          [8, 25],
+          [8, 25],
+          [8, 25],
+          [8, 25],
+          [8, 25],
+          [8, 25]
+      ],
+      cycle_focus_seconds: 8,
+      cycle_break_seconds: 25,
+    }
+
     return (
     <>
     <div className="flex flex-col h-full">
         <Card>
             {sessionInfo 
             ?
-                <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
+                // <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
+                <Timer session={fakeSession} handleComplete={handleOnComplete}/>
             
             :
                 <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated} audioRef={audioRef} setIsPlaying={setIsPlaying}/>

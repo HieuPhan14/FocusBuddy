@@ -13,7 +13,7 @@ interface NavBarProps {
 }
 
 const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) => {
-    const { theme, handleTheme, lightMode } = useTheme()
+    const { theme, handleTheme} = useTheme()
 
     const {isAuthenticated} = useAuth()
     const [isVolumeOpen, setIsVolumeOpen] = useState<boolean>(false)
@@ -34,7 +34,7 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) =
             </select>
 
             <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+                <PixelIcon name="Chevron-Arrow-Down" size="w-2 h-[5px]"/>
             </div>
         </div>
     )
@@ -84,12 +84,12 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) =
                     ref={popoverRef}
                 >
                     <button
-                        className="px-2 py-1 group-hover:border-r-2 group-hover:border-border transition hover:bg-input"
+                        className="cursor-pointer px-2 py-1 group-hover:border-r-2 group-hover:border-border transition hover:bg-input"
                         onClick={toggleMusic}
                     >
                         {isPlaying 
-                            ? <PixelIcon name="Speaker-Crossed" variant={lightMode}/> 
-                            : <PixelIcon name="Speaker-0" variant={lightMode}/> 
+                            ? <PixelIcon name="Speaker-Crossed"/> 
+                            : <PixelIcon name="Speaker-0"/> 
                         }
                     </button>
                         
@@ -97,7 +97,7 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) =
                         className="px-1 py-1 flex items-center justify-center hover:bg-input [align-self:stretch]"
                         onClick={volumeAdjust}
                     >
-                        <PixelIcon name="Chevron-Arrow-Down" variant={lightMode} size="w-2 h-[5px]"/>
+                        <PixelIcon name="Chevron-Arrow-Down" size="w-2 h-[5px]"/>
                     </button> 
 
                     {isVolumeOpen && 
