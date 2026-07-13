@@ -79,8 +79,17 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     return (
         <>
             <div className="flex flex-col h-full">
-                <div className="flex flex-col h-3/5 items-center justify-between">
-                    <div className="border-b-2">frame</div>
+                <div className="flex flex-col h-3/5 items-center justify-between gap-2">
+                    <div className="w-full flex-1 min-h-0 overflow-hidden relative border-b-2 border-border-light">
+                        <img
+                            src="/frame/map_v1.png"
+                            className="absolute [image-rendering:pixelated] "
+                            style={{
+                                transform: `translate(-${100}px, -${100}px) scale(3)`,
+                                transformOrigin: "top left"
+                            }}
+                        />
+                    </div>
 
                     <div className="flex gap-2 mb-2">
                         <button
