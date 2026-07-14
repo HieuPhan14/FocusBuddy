@@ -81,3 +81,237 @@
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
+
+/* objects animation */
+
+/* campfire */
+@keyframes campfire-burn {
+  from {background-position-x: 0;}
+  to {background-position-x: -112px;}
+}
+.animate-campfire { animation: campfire-burn 0.7s steps(7) infinite; } 
+
+
+/* boats */
+@keyframes boat-bob-right {
+  0% { background-position: 0 -64px;}
+  50% { background-position: -32px -64px;}
+  100% { background-position: 0 -64px;}
+}
+.animate-boat-right { animation: boat-bob-right 1.2s steps(1) infinite}
+
+@keyframes boat-bob-up {
+  0% { background-position: 0 0px;}
+  50% { background-position: -16px 0px;}
+  100% { background-position: 0 0px;}
+}
+.animate-boat-up { animation: boat-bob-up 1.2s steps(1) infinite}
+
+@keyframes boat-bob-left {
+  0% { background-position: 0 -80px;}
+  50% { background-position: -32px -80px;}
+  100% { background-position: 0 -80px;}
+}
+.animate-boat-left { animation: boat-bob-left 1.2s steps(1) infinite}
+
+
+/* fountain */
+@keyframes fountain {
+  from { background-position: 0;}
+  to { background-position: -384px;}
+}
+.animate-fountain { animation: fountain 1s steps(6) infinite; }
+
+
+/* calf */
+@keyframes calf-eat-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -768px -96px;}
+}
+.animate-calf-eat-left { animation: calf-eat-left 2s steps(16) infinite}
+
+@keyframes calf-eat-down {
+  from { background-position: 0 -144px;}
+  to { background-position: -768px -144px;}
+}
+.animate-calf-eat-down { animation: calf-eat-down 2s steps(16) infinite}
+
+@keyframes calf-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-calf-idle-right { animation: calf-idle-right 1.6s steps(8) infinite}
+
+@keyframes calf-sleep-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-calf-sleep-right { animation: calf-sleep-right 2.4s steps(8) infinite}
+
+@keyframes cow-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-cow-idle-right { animation: cow-idle-right 1.6s steps(8) infinite}
+
+/* chick and chicken */
+@keyframes chick-peck-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-chick-peck-right { animation: chick-peck-right 1.4s steps(8) infinite; }
+
+@keyframes chick-sleep-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -384px -96px;}
+}
+.animate-chick-sleep-left { animation: chick-sleep-left 2.4s steps(8) infinite; }
+
+@keyframes chick-idle-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -240px -144px;}
+}
+.animate-chick-idle-front { animation: chick-idle-front 1.5s steps(5) infinite; }
+
+@keyframes chicken-peck-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -384px -96px;}
+}
+.animate-chicken-peck-left { animation: chicken-peck-left 1.4s steps(8) infinite; }
+
+@keyframes chicken-sleep-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-chicken-sleep-front { animation: chicken-sleep-front 2.4s steps(8) infinite; }
+
+/* goat and baby goat */
+
+@keyframes goat-eat-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -768px -96px;}
+}
+.animate-goat-eat-left { animation: goat-eat-left 2s steps(16) infinite; }
+
+@keyframes goat-idle-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -384px -96px;}
+}
+.animate-goat-idle-left { animation: goat-idle-left 1.6s steps(8) infinite; }
+
+@keyframes goat-eat-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -768px -144px;}
+}
+.animate-goat-eat-front { animation: goat-eat-front 2s steps(16) infinite; }
+
+@keyframes babygoat-eat-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -768px -48px;}
+}
+.animate-babygoat-eat-right { animation: babygoat-eat-right 2s steps(16) infinite; }
+
+@keyframes babygoat-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-babygoat-idle-right { animation: babygoat-idle-right 1.6s steps(8) infinite; }
+
+/* mallard */
+@keyframes mallardduck-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-mallardduck-idle-right { animation: mallardduck-idle-right 1.6s steps(8) infinite; }
+
+@keyframes mallardduck-sleep-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-mallardduck-sleep-front { animation: mallardduck-sleep-front 2.4s steps(8) infinite; }
+
+@keyframes mallardduckling-sleep-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-mallardduckling-sleep-front { animation: mallardduckling-sleep-front 2.4s steps(8) infinite; }
+
+
+/* lamb */
+@keyframes lamb-eat-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -768px -96px;}
+}
+.animate-lamb-eat-left { animation: lamb-eat-left 2s steps(16) infinite; }
+
+@keyframes lamb-eat-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -768px -144px;}
+}
+.animate-lamb-eat-front { animation: lamb-eat-front 2s steps(16) infinite; }
+
+@keyframes lamb-eat-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -768px -48px;}
+}
+.animate-lamb-eat-right { animation: lamb-eat-right 2s steps(16) infinite; }
+
+@keyframes lamb-sleep-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-lamb-sleep-front { animation: lamb-sleep-front 2.4s steps(8) infinite; }
+
+
+/* sheep */
+@keyframes sheep-eat-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -768px -48px;}
+}
+.animate-sheep-eat-right { animation: sheep-eat-right 2s steps(16) infinite; }
+
+@keyframes sheep-eat-back {
+  from { background-position: 0 0;}
+  to { background-position: -768px 0;}
+}
+.animate-sheep-eat-back { animation: sheep-eat-back 2s steps(16) infinite; }
+
+@keyframes sheep-eat-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -768px -96px;}
+}
+.animate-sheep-eat-left { animation: sheep-eat-left 2s steps(16) infinite; }
+
+@keyframes sheep-sleep-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -384px -96px;}
+}
+.animate-sheep-sleep-left { animation: sheep-sleep-left 2.4s steps(8) infinite; }
+
+@keyframes sheep-idle-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-sheep-idle-front { animation: sheep-idle-front 1.6s steps(8) infinite; }
+
+
+/* slime */
+@keyframes slime-idle-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-slime-idle-front { animation: slime-idle-front 1.2s steps(8) infinite; }
+
+@keyframes slime-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-slime-idle-right { animation: slime-idle-right 1.6s steps(8) infinite; }
+
+
+/* bat idle */
+@keyframes bat-idle-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -192px -96px;}
+}
+.animate-bat-idle-left { animation: bat-idle-left 0.8s steps(4) infinite; }
