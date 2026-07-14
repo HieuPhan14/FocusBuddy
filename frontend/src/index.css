@@ -315,3 +315,45 @@
   to { background-position: -192px -96px;}
 }
 .animate-bat-idle-left { animation: bat-idle-left 0.8s steps(4) infinite; }
+
+
+/* Characters */
+/* monkey */
+@keyframes monkey-idle-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -240px -144px;}
+}
+.animate-monkey-idle-front { animation: monkey-idle-front 1.5s steps(5) infinite; }
+
+/* lion */
+@keyframes lion-idle-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -240px -96px;}
+}
+.animate-lion-idle-left { animation: lion-idle-left 1.5s steps(5) infinite; }
+
+/* bunny */
+@keyframes bunny-idle-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -240px -96px;}
+}
+.animate-bunny-idle-left { animation: bunny-idle-left 1.5s steps(5) infinite; }
+
+/* base */
+@keyframes base-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -240px -48px;}
+}
+.animate-base-idle-right { animation: base-idle-right 1.5s steps(5) infinite; }
+
+@keyframes base-idle-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -240px -144px;}
+}
+.animate-base-idle-front { animation: base-idle-front 1.5s steps(5) infinite; }
+
+@keyframes base-idle-back {
+  from { background-position: 0 0;}
+  to { background-position: -240px 0;}
+}
+.animate-base-idle-back { animation: base-idle-back 1.5s steps(5) infinite; }
