@@ -1,11 +1,12 @@
 import type { SessionSchedule } from "../types/session";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {handlePhase, formatTime, formatTimeRemaining} from "../lib/timer";
 import type { PhaseInfo } from "../lib/timer";
 import React from "react";
 import clsx from "clsx"
 import { useTimer } from "../hooks/useTimer";
 import PixelIcon from "./PixelIcon";
+import { calculateMoveTime, DUCK_ROUTE, duckLookupPosition, type DuckInfo } from "../lib/route";
 
 interface TimerProps {
     session: SessionSchedule
@@ -21,6 +22,11 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
     const isBreak = displayInfo?.phase.startsWith("Break")
 
+    const [duckState, setDuckState] = useState<DuckInfo | null>(null)
+    const duckTimeline = useMemo(() => {
+        return calculateMoveTime(total_session_planned, DUCK_ROUTE)
+    },[total_session_planned])
+
     const handleScrollCycle = ():void => {
         scrollRef.current?.scrollIntoView({
             behavior: 'smooth',
@@ -32,6 +38,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     useEffect(() => {
         const phaseInfo = handlePhase(total_session_planned, Math.floor(elapsedTimeRef.current), session.schedule)
         setDisplayInfo(phaseInfo)
+        setDuckState(duckLookupPosition(duckTimeline, elapsedTimeRef.current))
 
         const id = setInterval(() => {
             if(!isPausedRef.current){
@@ -47,6 +54,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 } else {
                     const phaseInfo = handlePhase(total_session_planned, Math.floor(elapsedTimeRef.current), session.schedule)
                     setDisplayInfo(phaseInfo)
+                    setDuckState(duckLookupPosition(duckTimeline, elapsedTimeRef.current))
                 }
             }
             
@@ -55,7 +63,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
         return () => {
             clearInterval(id)
         }
-    }, [setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef]);
+    }, [setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef, duckTimeline]);
     
     useEffect(() => {
         handleScrollCycle()
@@ -84,7 +92,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                         <div
                             className=""
                             style={{
-                                transform: `translate(-${0}px, -${0}px) scale(.5)`,
+                                transform: `translate(-${0}px, -${300}px) scale(1.75)`,
                                 transformOrigin: "top left"
                             }}
                         >
@@ -455,12 +463,25 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                             {/* - */}
 
                             {/* DUCK - MAIN CHARACTER */}
-                            <div className="absolute" style={{ left: 63, top: 180 }}>
-                                <div className="absolute w-[16px] h-[16px] left-[15px] top-[18px] bg-[url('/frame/shadow.png')]"></div>
+                            {
+                            duckState &&
+                            <div className="absolute" style={{ left: duckState.x, top: duckState.y }}>
+                                <div className="absolute w-[16px] h-[16px] left-[16px] top-[18px] bg-[url('/frame/shadow.png')]"></div>
                                 <div
-                                    className="absolute w-[48px] h-[48px] left-0 top-0 bg-[url('/frame/characters/duck_main/Duck_Run.png')] animate-duck-run-front"
+                                    className={clsx("absolute w-[48px] h-[48px] left-0 top-0",
+                                        isPaused ? "animate-duck-idle-front"
+                                            : duckState.type === "hold" ? (duckState.action === "water" ? "animate-duck-water-front" : "animate-duck-idle-front")
+                                            : "animate-duck-run-front"
+                                    )}
+
+                                    style={{ backgroundImage: `url('/frame/characters/duck_main/${
+                                        isPaused ? "Duck_Idle.png"
+                                            : duckState.type === "hold" ? (duckState.action === "water" ? "Duck_Water.png" : "Duck_Idle.png")
+                                            : "Duck_Run.png"
+                                        }')`
+                                    }}
                                 ></div>
-                            </div>
+                            </div>}
                             
                             {/* - */}
                         </div>

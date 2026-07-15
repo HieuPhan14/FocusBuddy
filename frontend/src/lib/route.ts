@@ -1,4 +1,4 @@
-type RouteStop = {
+export type RouteStop = {
     x: number
     y: number
     action: "idle" | "water"
@@ -6,8 +6,8 @@ type RouteStop = {
 }
 
 type TimelineSegment = 
-    | {start: number, end: number, type: "hold"; action: RouteStop["action"]} 
-    | {start: number, end: number, type: "run"}
+    | {start: number, end: number, type: "hold"; action: RouteStop["action"], x: number, y: number} 
+    | {start: number, end: number, type: "run", fromX: number, fromY: number, toX: number, toY: number}
 
 const DUCK_ROUTE: RouteStop[] = [
     { x: 63, y: 180, action: "idle", holdSeconds: 3 },
@@ -17,6 +17,13 @@ const DUCK_ROUTE: RouteStop[] = [
     { x: 63, y: 275, action: "idle", holdSeconds: 0 },
     { x: 63, y: 307, action: "water", holdSeconds: 20 },
 ];
+
+export interface DuckInfo {
+    x: number
+    y: number
+    type: "run" | "hold"
+    action?: RouteStop["action"]
+}
 
 const calculateMoveTime = (total_session_planned: number, route: RouteStop[]): TimelineSegment[] => {
     let sumHoldSeconds = route[0].holdSeconds
@@ -36,14 +43,14 @@ const calculateMoveTime = (total_session_planned: number, route: RouteStop[]): T
         const duration = runBudget * (distancePerLeg[i] / totalRunDistance)
         const holdDuration = route[i].holdSeconds
 
-        if (duration > 0){
-            timeline.push({start: cursor, end: cursor + duration, type: "run"})
+        if (duration > 0 && i > 0){
+            timeline.push({start: cursor, end: cursor + duration, type: "run", fromX: route[i-1].x, fromY: route[i-1].y, toX: route[i].x, toY: route[i].y})
             cursor += duration
         }
         
 
         if (route[i].holdSeconds > 0){
-            timeline.push({start: cursor, end: cursor + holdDuration, type: "hold", action: route[i].action})
+            timeline.push({start: cursor, end: cursor + holdDuration, type: "hold", action: route[i].action, x: route[i].x, y: route[i].y})
             cursor += holdDuration
         }
     }
@@ -51,4 +58,17 @@ const calculateMoveTime = (total_session_planned: number, route: RouteStop[]): T
     return timeline
 }
 
-export { DUCK_ROUTE, calculateMoveTime}
+const duckLookupPosition = (timeline: TimelineSegment[], elapsedSeconds: number): DuckInfo => {
+    const segment = timeline.find((obj) => elapsedSeconds <= obj.end) ?? timeline[timeline.length - 1]
+
+    if (segment.type === "hold")
+        return {x: segment.x, y: segment.y, type: segment.type, action: segment.action}
+    else {
+        const portion = (elapsedSeconds - segment.start) / (segment.end - segment.start)
+        const x = segment.fromX + (segment.toX - segment.fromX)*portion
+        const y = segment.fromY + (segment.toY - segment.fromY)*portion
+        return {x: x, y: y, type: segment.type}
+    }
+}
+
+export { DUCK_ROUTE, calculateMoveTime, duckLookupPosition}
