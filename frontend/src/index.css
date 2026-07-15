@@ -236,6 +236,13 @@
 }
 .animate-mallardduckling-sleep-front { animation: mallardduckling-sleep-front 2.4s steps(8) infinite; }
 
+@keyframes mallardduckling-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -240px -48px;}
+}
+.animate-mallardduckling-idle-right { animation: mallardduckling-idle-right 1.6s steps(5) infinite; }
+
+
 
 /* lamb */
 @keyframes lamb-eat-left {
@@ -357,3 +364,64 @@
   to { background-position: -240px 0;}
 }
 .animate-base-idle-back { animation: base-idle-back 1.5s steps(5) infinite; }
+
+/* DUCK - main character */
+
+/* watering */
+@keyframes duck-water-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -432px -96px;}
+}
+.animate-duck-water-left { animation: duck-water-left 1.8s steps(9) infinite; }
+
+@keyframes duck-water-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -432px -144px;}
+}
+.animate-duck-water-front { animation: duck-water-front 1.8s steps(9) infinite; }
+
+
+/* run */
+@keyframes duck-run-back {
+  from { background-position: 0 0;}
+  to { background-position: -384px 0;}
+}
+.animate-duck-run-back { animation: duck-run-back 1.2s steps(8) infinite; }
+
+@keyframes duck-run-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -384px -48px;}
+}
+.animate-duck-run-right { animation: duck-run-right 1.2s steps(8) infinite; }
+
+@keyframes duck-run-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -384px -96px;}
+}
+.animate-duck-run-left { animation: duck-run-left 1.2s steps(8) infinite; }
+
+@keyframes duck-run-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -384px -144px;}
+}
+.animate-duck-run-front { animation: duck-run-front 1.2s steps(8) infinite; }
+
+
+/* idle */
+@keyframes duck-idle-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -240px -48px;}
+}
+.animate-duck-idle-right { animation: duck-idle-right 1.5s steps(5) infinite; }
+
+@keyframes duck-idle-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -240px -96px;}
+}
+.animate-duck-idle-left { animation: duck-idle-left 1.5s steps(5) infinite; }
+
+@keyframes duck-idle-front {
+  from { background-position: 0 -144px;}
+  to { background-position: -240px -144px;}
+}
+.animate-duck-idle-front { animation: duck-idle-front 1.5s steps(5) infinite; }

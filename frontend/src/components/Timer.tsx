@@ -84,7 +84,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                         <div
                             className=""
                             style={{
-                                transform: `translate(-${150}px, -${200}px) scale(.75)`,
+                                transform: `translate(-${0}px, -${0}px) scale(.5)`,
                                 transformOrigin: "top left"
                             }}
                         >
@@ -431,7 +431,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                             {/* - */}
 
                             {/* base idle front */}
-                            <div className="absolute w-[16px] h-[16px] left-[221px] top-[252px] bg-[url('/frame/shadow.png')]"></div>
+                            <div className="absolute w-[16px] h-[16px] left-[221px] top-[253px] bg-[url('/frame/shadow.png')]"></div>
                             <div
                                 className="absolute w-[48px] h-[48px] left-[205px] top-[234px] bg-[url('/frame/characters/base/Base_Idle.png')] animate-base-idle-front"
                             >
@@ -454,10 +454,13 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                             </div>
                             {/* - */}
 
-                            {/* duck */}
-                            <div className="absolute w-[48px] h-[48px]"
-                                style={{left: 63, top:180, backgroundImage: "url('/frame/characters/duck_main/Duck_Idle.png')", backgroundPosition: "-144px -144px"}}
-                            ></div>
+                            {/* DUCK - MAIN CHARACTER */}
+                            <div className="absolute" style={{ left: 63, top: 180 }}>
+                                <div className="absolute w-[16px] h-[16px] left-[15px] top-[18px] bg-[url('/frame/shadow.png')]"></div>
+                                <div
+                                    className="absolute w-[48px] h-[48px] left-0 top-0 bg-[url('/frame/characters/duck_main/Duck_Run.png')] animate-duck-run-front"
+                                ></div>
+                            </div>
                             
                             {/* - */}
                         </div>
