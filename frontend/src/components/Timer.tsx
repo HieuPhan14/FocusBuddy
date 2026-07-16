@@ -84,6 +84,57 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
         }
     }
 
+    const getAnimationDirection = ():string => {
+        if (duckState){
+            if (isPaused){
+
+                if(duckState.direction === "front")
+                    return "animate-duck-idle-front"
+                else if (duckState.direction === "back")
+                    return "animate-duck-idle-back"
+                else if (duckState.direction === "left")
+                    return "animate-duck-idle-left"
+                else if (duckState.direction === "right")
+                    return "animate-duck-idle-right"
+
+            }  else {
+                if (duckState.type === "hold"){
+                    if (duckState.action === "water"){
+                        if(duckState.direction === "front")
+                            return "animate-duck-water-front"
+                        else if (duckState.direction === "back")
+                            return "animate-duck-water-back"
+                        else if (duckState.direction === "left")
+                            return "animate-duck-water-left"
+                        else if (duckState.direction === "right")
+                            return "animate-duck-water-right"
+
+                    } else {
+                        if(duckState.direction === "front")
+                            return "animate-duck-idle-front"
+                        else if (duckState.direction === "back")
+                            return "animate-duck-idle-back"
+                        else if (duckState.direction === "left")
+                            return "animate-duck-idle-left"
+                        else if (duckState.direction === "right")
+                            return "animate-duck-idle-right"
+                    }
+
+                } else {
+                    if(duckState.direction === "front")
+                        return "animate-duck-run-front"
+                    else if (duckState.direction === "back")
+                        return "animate-duck-run-back"
+                    else if (duckState.direction === "left")
+                        return "animate-duck-run-left"
+                    else if (duckState.direction === "right")
+                        return "animate-duck-run-right"
+                }
+            }
+        }
+        return "animate-duck-idle-front"
+    }
+
     return (
         <>
             <div className="flex flex-col h-full">
@@ -469,9 +520,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                                 <div className="absolute w-[16px] h-[16px] left-[16px] top-[18px] bg-[url('/frame/shadow.png')]"></div>
                                 <div
                                     className={clsx("absolute w-[48px] h-[48px] left-0 top-0",
-                                        isPaused ? "animate-duck-idle-front"
-                                            : duckState.type === "hold" ? (duckState.action === "water" ? "animate-duck-water-front" : "animate-duck-idle-front")
-                                            : "animate-duck-run-front"
+                                        getAnimationDirection()                               
                                     )}
 
                                     style={{ backgroundImage: `url('/frame/characters/duck_main/${
