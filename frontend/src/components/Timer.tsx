@@ -1,5 +1,5 @@
 import type { SessionSchedule } from "../types/session";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {handlePhase, formatTime, formatTimeRemaining} from "../lib/timer";
 import type { PhaseInfo } from "../lib/timer";
 import React from "react";
@@ -19,6 +19,15 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     const scrollRef = useRef<HTMLDivElement>(null)
     const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
 
+    const [isBatAlive, setIsBatAlive] = useState<boolean>(true)
+    const [batAnimation, setBatAnimation] = useState<string>("animate-bat-idle-left bg-[url('/frame/animals/bat/Bat_Idle.png')]")
+    const [isBatOnMap, setIsBatOnMap ] = useState<boolean>(true)
+    const BAT_HIT_DURATION = 6
+    const BAT_HIT_DELAY = 0.75
+    const BAT_DEATH_DURATION = 2
+    const BAT_HIDDEN_DELAY = 4
+    const fightStartRef = useRef<number | null>(null)
+
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
     const isBreak = displayInfo?.phase.startsWith("Break")
 
@@ -35,6 +44,23 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
         });
     }   
 
+    const handleBatAnimation = useCallback((currentDuck: DuckInfo, fightStart: number | null): void => {
+        if (fightStart === null) return
+
+        if (currentDuck.type === "hold" && currentDuck.action === "fight") {
+            const timeSinceFightStart = elapsedTimeRef.current - fightStart
+
+            if (timeSinceFightStart < BAT_HIT_DELAY)
+                setBatAnimation("animate-bat-idle-left bg-[url('/frame/animals/bat/Bat_Idle.png')]")
+            else if (timeSinceFightStart < BAT_HIT_DURATION + BAT_HIT_DELAY){
+                setBatAnimation("animate-bat-hit-left bg-[url('/frame/animals/bat/Bat_Hit.png')]")
+            } else 
+                setBatAnimation("animate-bat-dead bg-[url('/frame/animals/bat/Bat_Death.png')]")
+            
+        }
+    }, [elapsedTimeRef])
+
+    //-------TICKING LOGIC----------------------------------
     useEffect(() => {
         const phaseInfo = handlePhase(total_session_planned, Math.floor(elapsedTimeRef.current), session.schedule)
         setDisplayInfo(phaseInfo)
@@ -46,6 +72,22 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                     accumulatedBeforeRef.current + (Date.now() - startTimeRef.current) /1000,
                     total_session_planned
                 )
+                const currentDuck = duckLookupPosition(duckTimeline, elapsedTimeRef.current)
+                setDuckState(currentDuck)
+
+                // BAT RENDERING-----------
+                if (currentDuck.type === "hold" && currentDuck.action === "fight" && fightStartRef.current === null)
+                    fightStartRef.current = currentDuck.start
+
+                handleBatAnimation(currentDuck, fightStartRef.current)
+
+                if (fightStartRef.current !== null && elapsedTimeRef.current - fightStartRef.current >= BAT_HIT_DURATION + BAT_HIT_DELAY)
+                    setIsBatAlive(false)
+
+                if (fightStartRef.current !== null && elapsedTimeRef.current - fightStartRef.current >= BAT_HIT_DURATION + BAT_DEATH_DURATION + BAT_HIDDEN_DELAY + BAT_HIT_DELAY)
+                    setIsBatOnMap(false)
+
+                // -------------------------
 
                 if (elapsedTimeRef.current >= total_session_planned){
                     setIsCompleted(true)
@@ -54,7 +96,6 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 } else {
                     const phaseInfo = handlePhase(total_session_planned, Math.floor(elapsedTimeRef.current), session.schedule)
                     setDisplayInfo(phaseInfo)
-                    setDuckState(duckLookupPosition(duckTimeline, elapsedTimeRef.current))
                 }
             }
             
@@ -63,7 +104,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
         return () => {
             clearInterval(id)
         }
-    }, [setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef, duckTimeline]);
+    }, [handleBatAnimation, setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef, duckTimeline]);
     
     useEffect(() => {
         handleScrollCycle()
@@ -85,54 +126,25 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     }
 
     const getAnimationDirection = ():string => {
+        let motion: "idle" | "water" | "run" | "fight"
+
         if (duckState){
-            if (isPaused){
+            if (isPaused)
+                motion = "idle"
 
-                if(duckState.direction === "front")
-                    return "animate-duck-idle-front"
-                else if (duckState.direction === "back")
-                    return "animate-duck-idle-back"
-                else if (duckState.direction === "left")
-                    return "animate-duck-idle-left"
-                else if (duckState.direction === "right")
-                    return "animate-duck-idle-right"
-
-            }  else {
+            else {
                 if (duckState.type === "hold"){
-                    if (duckState.action === "water"){
-                        if(duckState.direction === "front")
-                            return "animate-duck-water-front"
-                        else if (duckState.direction === "back")
-                            return "animate-duck-water-back"
-                        else if (duckState.direction === "left")
-                            return "animate-duck-water-left"
-                        else if (duckState.direction === "right")
-                            return "animate-duck-water-right"
+                    if (duckState.action === "water")
+                        motion = "water"
+                    else if (duckState.action === "fight" && isBatAlive)
+                        motion = "fight"
+                    else motion = "idle"
 
-                    } else {
-                        if(duckState.direction === "front")
-                            return "animate-duck-idle-front"
-                        else if (duckState.direction === "back")
-                            return "animate-duck-idle-back"
-                        else if (duckState.direction === "left")
-                            return "animate-duck-idle-left"
-                        else if (duckState.direction === "right")
-                            return "animate-duck-idle-right"
-                    }
+                } else motion = "run"
+            } 
+        } else return "animate-duck-idle-front"
 
-                } else {
-                    if(duckState.direction === "front")
-                        return "animate-duck-run-front"
-                    else if (duckState.direction === "back")
-                        return "animate-duck-run-back"
-                    else if (duckState.direction === "left")
-                        return "animate-duck-run-left"
-                    else if (duckState.direction === "right")
-                        return "animate-duck-run-right"
-                }
-            }
-        }
-        return "animate-duck-idle-front"
+        return `animate-duck-${motion}-${duckState.direction}`
     }
 
     return (
@@ -143,7 +155,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                         <div
                             className=""
                             style={{
-                                transform: `translate(-${0}px, -${300}px) scale(1.75)`,
+                                transform: `translate(-${350}px, -${550}px) scale(1.25)`,
                                 transformOrigin: "top left"
                             }}
                         >
@@ -452,11 +464,17 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                             {/* - */}
 
                             {/* bat idle left */}
-                            <div className="absolute w-[16px] h-[16px] left-[373px] top-[459px] bg-[url('/frame/shadow.png')]"></div>
-                            <div
-                                className="absolute w-[48px] h-[48px] left-[357px] top-[436px] bg-[url('/frame/animals/bat/Bat_Idle.png')] animate-bat-idle-left"
-                            >
-                            </div>
+                            {isBatOnMap &&
+                                <>
+                                    {isBatAlive &&<div className="absolute w-[16px] h-[16px] left-[373px] top-[459px] bg-[url('/frame/shadow.png')]"></div>}
+                                    <div
+                                        className={clsx("absolute w-[48px] h-[48px]",
+                                            !isBatAlive ? "left-[353px] top-[440px]" : "left-[357px] top-[436px]",
+                                            batAnimation)}
+                                    >
+                                    </div>
+                                </>
+                            }
                             {/* - */}
 
                             {/* monkey idle front */}
@@ -525,8 +543,11 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
 
                                     style={{ backgroundImage: `url('/frame/characters/duck_main/${
                                         isPaused ? "Duck_Idle.png"
-                                            : duckState.type === "hold" ? (duckState.action === "water" ? "Duck_Water.png" : "Duck_Idle.png")
-                                            : "Duck_Run.png"
+                                            : duckState.type === "hold" 
+                                                ?
+                                                (duckState.action === "water" ? "Duck_Water.png"
+                                                    : duckState.action === "fight" && isBatAlive ? "Duck_Fight.png" : "Duck_Idle.png")
+                                                : "Duck_Run.png"
                                         }')`
                                     }}
                                 ></div>

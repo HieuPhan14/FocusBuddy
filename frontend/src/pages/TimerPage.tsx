@@ -26,11 +26,7 @@ const TimerPage = () => {
       schedule: [
           [8, 25],
           [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25]
+
       ],
       cycle_focus_seconds: 8,
       cycle_break_seconds: 25,

@@ -316,12 +316,24 @@
 .animate-slime-idle-right { animation: slime-idle-right 1.6s steps(8) infinite; }
 
 
-/* bat idle */
+/* bat */
 @keyframes bat-idle-left {
   from { background-position: 0 -96px;}
   to { background-position: -192px -96px;}
 }
 .animate-bat-idle-left { animation: bat-idle-left 0.8s steps(4) infinite; }
+
+@keyframes bat-hit-left {
+  from { background-position: 0 -96px;}
+  to { background-position: -96px -96px;}
+}
+.animate-bat-hit-left { animation: bat-hit-left 0.4s steps(2) infinite; }
+
+@keyframes bat-dead {
+  from { background-position: 0 0;}
+  to { background-position: -192px 0;}
+}
+.animate-bat-dead { animation: bat-dead 2s steps(5, jump-none) forwards; }
 
 
 /* Characters */
@@ -425,3 +437,17 @@
   to { background-position: -240px -144px;}
 }
 .animate-duck-idle-front { animation: duck-idle-front 1.5s steps(5) infinite; }
+
+@keyframes duck-idle-back {
+  from { background-position: 0 0;}
+  to { background-position: -240px 0;}
+}
+.animate-duck-idle-back { animation: duck-idle-back 1.5s steps(5) infinite; }
+
+
+/* fight */
+@keyframes duck-fight-right {
+  from { background-position: 0 -48px;}
+  to { background-position: -432px -48px;}
+}
+.animate-duck-fight-right { animation: duck-fight-right 1.4s steps(9) infinite; }
