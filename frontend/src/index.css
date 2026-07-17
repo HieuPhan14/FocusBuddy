@@ -451,3 +451,11 @@
   to { background-position: -432px -48px;}
 }
 .animate-duck-fight-right { animation: duck-fight-right 1.4s steps(9) infinite; }
+
+
+/* chest */
+@keyframes chest-open {
+  from { background-position: 0 -96px;}
+  to { background-position: -96px -96px;}
+}
+.animate-chest-open { animation: chest-open 2s steps(7, jump-none) forwards; }

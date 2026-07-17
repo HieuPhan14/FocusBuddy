@@ -28,6 +28,8 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
     const BAT_HIDDEN_DELAY = 4
     const fightStartRef = useRef<number | null>(null)
 
+    const [isChestOpen, setIsChestOpen] = useState<boolean>(false)
+
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
     const isBreak = displayInfo?.phase.startsWith("Break")
 
@@ -88,6 +90,12 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                     setIsBatOnMap(false)
 
                 // -------------------------
+
+                // CHECK FINAL CHEST OPEN-----------
+                if (currentDuck.x === 196 && currentDuck.y === 158)
+                    setIsChestOpen(true)
+
+                // ---------------------------------
 
                 if (elapsedTimeRef.current >= total_session_planned){
                     setIsCompleted(true)
@@ -155,7 +163,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                         <div
                             className=""
                             style={{
-                                transform: `translate(-${350}px, -${550}px) scale(1.25)`,
+                                transform: `translate(-${50}px, -${50}px) scale(1.5)`,
                                 transformOrigin: "top left"
                             }}
                         >
@@ -527,6 +535,19 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                             <div className="absolute w-[16px] h-[16px] left-[425px] top-[270px] bg-[url('/frame/shadow.png')]"></div>
                             <div
                                 className="absolute w-[48px] h-[48px] left-[409px] top-[252px] bg-[url('/frame/characters/bunny/Bunny_Idle.png')] animate-bunny-idle-left"
+                            >
+                            </div>
+                            {/* - */}
+
+                            {/* chest */}
+                            <div
+                                className={clsx("absolute w-[16px] h-[32px] left-[232px] top-[160px]",
+                                    isChestOpen && "animate-chest-open"
+                                )}
+                                style={{
+                                    backgroundImage: "url('/frame/spriteObj/Chest.png')", 
+                                    backgroundPosition: "0 -96px" 
+                                }}
                             >
                             </div>
                             {/* - */}
