@@ -1,3 +1,5 @@
+const RUN_SPEED = 18 //pixels per second
+
 export type RouteStop = {
     x: number
     y: number
@@ -86,15 +88,18 @@ const calculateMoveTime = (total_session_planned: number, route: RouteStop[]): T
         sumHoldSeconds += route[i].holdSeconds
     }
 
-    const runBudget = total_session_planned - sumHoldSeconds
     const totalRunDistance = distancePerLeg.reduce((sum, i) => sum + i, 0)
+
+    const runBudget = totalRunDistance / RUN_SPEED
+    const holdBudget = total_session_planned - runBudget
+    const holdScaleFactor = holdBudget / sumHoldSeconds
 
     const timeline: TimelineSegment[] = []
     let cursor = 0
     
     for (let i = 0; i < distancePerLeg.length; i++){
         const duration = runBudget * (distancePerLeg[i] / totalRunDistance)
-        const holdDuration = route[i].holdSeconds
+        const holdDuration = route[i].holdSeconds * holdScaleFactor
 
         
         if (duration > 0 && i > 0){
