@@ -1,5 +1,6 @@
 import { createContext, useRef, useState } from "react"
 import type { SessionResponse, SessionSchedule } from "../types/session"
+import type { DuckInfo } from "../lib/route"
 
 interface TimerProviderProps {
     children: React.ReactNode
@@ -21,6 +22,9 @@ interface TimerContextType {
     isPaused: boolean
     setIsPaused: React.Dispatch<React.SetStateAction<boolean>>
     togglePause: () => void
+
+    duckState: DuckInfo | null
+    setDuckState: React.Dispatch<React.SetStateAction<DuckInfo | null>>
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -33,6 +37,7 @@ const TimerProvider = ( { children }: TimerProviderProps) => {
     const elapsedTimeRef = useRef<number>(0)
     const isPausedRef = useRef<boolean>(false)
     const accumulatedBeforeRef = useRef<number>(0)
+    const [duckState, setDuckState] = useState<DuckInfo | null>(null)
 
     const togglePause = (): void => {
         if (!isPausedRef.current){
@@ -57,7 +62,7 @@ const TimerProvider = ( { children }: TimerProviderProps) => {
     
     return (
         <TimerContext.Provider 
-            value={{isPaused, setIsPaused, togglePause, isCompleted, setIsCompleted, endSession, sessionInfo, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef,
+            value={{duckState, setDuckState, isPaused, setIsPaused, togglePause, isCompleted, setIsCompleted, endSession, sessionInfo, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef,
                 setSessionInfo
             }}
         >

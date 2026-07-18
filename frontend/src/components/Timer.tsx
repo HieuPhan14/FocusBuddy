@@ -7,6 +7,7 @@ import clsx from "clsx"
 import { useTimer } from "../hooks/useTimer";
 import PixelIcon from "./PixelIcon";
 import { calculateMoveTime, DUCK_ROUTE, duckLookupPosition, type DuckInfo } from "../lib/route";
+import camera from "../lib/camera";
 
 interface TimerProps {
     session: SessionSchedule
@@ -14,9 +15,11 @@ interface TimerProps {
 }
 
 const Timer = ( {session, handleComplete}: TimerProps ) => {
-    const { isPaused, togglePause, endSession, isCompleted, setIsCompleted, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef} = useTimer()
+    const { duckState, setDuckState, isPaused, togglePause, endSession, isCompleted, setIsCompleted, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef} = useTimer()
 
     const scrollRef = useRef<HTMLDivElement>(null)
+    const cameraRef = useRef<HTMLDivElement>(null)
+
     const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
 
     const [isBatAlive, setIsBatAlive] = useState<boolean>(true)
@@ -30,13 +33,21 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
 
     const [isChestOpen, setIsChestOpen] = useState<boolean>(false)
 
+    const [cameraWidth, setCameraWidth] = useState<number>(0)
+    const [cameraHeight, setCameraHeight] = useState<number>(0)
+    const MAP_WIDTH = 640
+    const MAP_HEIGHT = 672
+    const SCALE = 2.5
+    
     const total_session_planned: number = session.schedule.reduce((acc, [a, b]) => acc + a + b, 0)
     const isBreak = displayInfo?.phase.startsWith("Break")
-
-    const [duckState, setDuckState] = useState<DuckInfo | null>(null)
+    
     const duckTimeline = useMemo(() => {
         return calculateMoveTime(total_session_planned, DUCK_ROUTE)
     },[total_session_planned])
+    
+    const cameraCoordinates = camera(MAP_WIDTH, MAP_HEIGHT, duckState, cameraWidth, cameraHeight, SCALE)
+    const [hasPositioned, setHasPositioned] = useState(false)
 
     const handleScrollCycle = ():void => {
         scrollRef.current?.scrollIntoView({
@@ -92,7 +103,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 // -------------------------
 
                 // CHECK FINAL CHEST OPEN-----------
-                if (currentDuck.x === 196 && currentDuck.y === 158)
+                if (currentDuck.x === DUCK_ROUTE[DUCK_ROUTE.length - 1].x && currentDuck.y === DUCK_ROUTE[DUCK_ROUTE.length - 1].y )
                     setIsChestOpen(true)
 
                 // ---------------------------------
@@ -112,8 +123,15 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
         return () => {
             clearInterval(id)
         }
-    }, [handleBatAnimation, setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef, duckTimeline]);
+    }, [setDuckState, handleBatAnimation, setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef, duckTimeline]);
     
+    useEffect(() => {
+        if (cameraRef.current){
+            setCameraWidth(cameraRef.current.clientWidth)
+            setCameraHeight(cameraRef.current.clientHeight)
+        }
+    }, [])
+
     useEffect(() => {
         handleScrollCycle()
     }, [displayInfo?.currentCycleIndex])
@@ -123,6 +141,13 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
             handleComplete()
     //eslint-disable-next-line
     }, [isCompleted])
+
+    useEffect(() => {
+        if (cameraWidth > 0 && cameraHeight > 0 && duckState != null){
+            //eslint-disable-next-line
+            setHasPositioned(true)
+        }
+    }, [cameraWidth, cameraHeight, duckState, setHasPositioned])
 
     const handleBreakSkip = (): void => {
         if (displayInfo?.phase.startsWith("Break")){
@@ -159,17 +184,26 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
         <>
             <div className="flex flex-col h-full">
                 <div className="flex flex-col h-3/5 items-center justify-between gap-2">
-                    <div className="w-full flex-1 min-h-0 overflow-hidden relative border-b-2 border-border-light">
+                    <div 
+                        className="w-full flex-1 min-h-0 overflow-hidden relative border-b-2 border-border-light"
+                        ref={cameraRef}
+                    >
                         <div
-                            className=""
+                            className="[image-rendering:pixelated]"
                             style={{
-                                transform: `translate(-${50}px, -${50}px) scale(1.5)`,
+                                transform: `scale(${SCALE}) 
+                                            translate(
+                                                ${cameraCoordinates.tx}px, 
+                                                ${cameraCoordinates.ty}px
+                                            )`
+                                            ,
+                                transition: hasPositioned ? "transform 250ms linear" : "none",
                                 transformOrigin: "top left"
                             }}
                         >
                             <img
                                 src="/frame/map_v3.png"
-                                className="absolute inset-0 max-w-none [image-rendering:pixelated]"
+                                className="absolute inset-0 max-w-none"
                                 
                             />
 

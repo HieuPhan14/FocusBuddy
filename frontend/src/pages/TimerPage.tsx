@@ -6,23 +6,9 @@ import { markCompleted } from "../services/session";
 import Card from "../components/Card";
 import { useTimer } from "../hooks/useTimer";
 import { useOutletContext } from "react-router-dom";
+import MiniMap from "../components/MiniMap";
 
-const TimerPage = () => {
-    const { isAuthenticated } = useAuth()
-    const { sessionInfo, setSessionInfo, startTimeRef} = useTimer()
-    const { audioRef, setIsPlaying } = useOutletContext<{audioRef: React.RefObject<HTMLAudioElement | null>; setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>}>()
-    const handleOnSessionStart = (data: SessionSchedule | SessionResponse) => {
-        setSessionInfo(data)
-        startTimeRef.current = Date.now()
-    }
-
-    const handleOnComplete = async () => {
-        if (isAuthenticated && sessionInfo && 'id' in sessionInfo){
-            await markCompleted(sessionInfo.id, {status: "completed"})
-        }
-    }
-
-    const fakeSession: SessionSchedule = {
+const fakeSession: SessionSchedule = {
       schedule: [
           [8, 25],
           [8, 25],
@@ -39,19 +25,37 @@ const TimerPage = () => {
       cycle_break_seconds: 25,
     }
 
+const TimerPage = () => {
+    const { isAuthenticated } = useAuth()
+    const { sessionInfo, setSessionInfo, startTimeRef} = useTimer()
+    const { audioRef, setIsPlaying } = useOutletContext<{audioRef: React.RefObject<HTMLAudioElement | null>; setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>}>()
+    const handleOnSessionStart = (data: SessionSchedule | SessionResponse) => {
+        setSessionInfo(data)
+        startTimeRef.current = Date.now()
+    }
+
+    const handleOnComplete = async () => {
+        if (isAuthenticated && sessionInfo && 'id' in sessionInfo){
+            await markCompleted(sessionInfo.id, {status: "completed"})
+        }
+    }
+
     return (
     <>
-    <div className="flex flex-col h-full">
-        <Card>
-            {sessionInfo 
-            ?
-                // <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
-                <Timer session={fakeSession} handleComplete={handleOnComplete}/>
-            
-            :
-                <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated} audioRef={audioRef} setIsPlaying={setIsPlaying}/>
-            }
-        </Card>
+    <div className="flex justify-center items-center h-full">
+        <div className="relative w-[400px] max-h-[600px] h-full">
+            <Card>
+                {sessionInfo 
+                ?
+                    // <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
+                    <Timer session={fakeSession} handleComplete={handleOnComplete}/>
+                :
+                    <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated} audioRef={audioRef} setIsPlaying={setIsPlaying}/>
+                }
+            </Card>
+
+            {sessionInfo && <MiniMap />}
+        </div>
     </div>
     </>
     );
