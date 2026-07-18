@@ -9,6 +9,9 @@ const Layout = () => {
     const { theme } = useTheme()
     const audioRef = useRef<HTMLAudioElement | null>(null)
     const [isPlaying, setIsPlaying] = useState<boolean>(false)
+
+    const [isHideCard, setIsHideCard] = useState<boolean>(false) 
+
     const [volume, setVolume] = useState<number>(() => {
         const stored = localStorage.getItem("volume")
         return stored ? Number(stored) : 0.5
@@ -21,6 +24,10 @@ const Layout = () => {
             audioRef.current?.pause()
             setIsPlaying(false)
         }
+    }
+
+    const toggleCardHide = () => {
+        setIsHideCard(!isHideCard)
     }
 
     useEffect(() => {
@@ -40,11 +47,11 @@ const Layout = () => {
             <Background />
 
             <div className="relative z-20">
-                <NavBar toggleMusic={toggleMusic} isPlaying={isPlaying} volume={volume} handleVolume={handleVolume}/>
+                <NavBar isCardHiding={isHideCard} toggleCardHide={toggleCardHide} toggleMusic={toggleMusic} isPlaying={isPlaying} volume={volume} handleVolume={handleVolume}/>
             </div>
 
             <main className="flex-1 h-full relative z-10">
-                <Outlet context={{ audioRef, setIsPlaying }}/>
+                <Outlet context={{ audioRef, setIsPlaying, isHideCard }}/>
             </main>
         </div>
     )

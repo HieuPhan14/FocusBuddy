@@ -9,6 +9,7 @@ import PixelIcon from "./PixelIcon";
 import { calculateMoveTime, DUCK_ROUTE, duckLookupPosition, type DuckInfo } from "../lib/route";
 import camera, { SCALE } from "../lib/camera";
 import MapScene from "./MapScene";
+import Modal from "./Modal";
 
 interface TimerProps {
     session: SessionSchedule
@@ -204,9 +205,9 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 {
                 displayInfo &&
 
-                <div className="flex h-2/5 justify-around pb-2 min-h-[200px]">
+                <div className="flex h-2/5 justify-around pb-2 min-h-[220px]">
                     
-                    <div className="flex flex-col text-text body-text justify-between h-full">
+                    <div className="flex flex-col text-text body-text justify-between">
 
                         <div className="inner-panel-row !py-1">
                             <div className="flex gap-2 items-center">
@@ -247,7 +248,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
 
                     </div>
 
-                    <div className="flex flex-col h-full inner-panel-row !p-2 !pt-0 font-display text-text">
+                    <div className="flex flex-col inner-panel-row !p-2 !pt-0 font-display text-text">
                         <div className="border-b-2 border-border-light mb-1 gap-1 flex items-baseline justify-center">
                             <span>Cycle</span>
                             <span className="font-number text-xl">{displayInfo.currentCycleIndex}</span>
@@ -291,11 +292,23 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 </div>
                 }
             {isCompleted && 
-                <button
-                    onClick={endSession}
-                >
-                    Congratulation u nailed this focus session. Click to progress.
-                </button>
+                <Modal title="Session Complete">
+                    <div className="flex flex-col items-center gap-2 text-center">
+                        <p className="font-display text-text">
+                            You nailed this session. 🎉🎉🎉
+                        </p>
+                        <p className="body-text text-muted text-sm">
+                            Nice focus! Ready for the next one?
+                        </p>
+                        <button
+                            onClick={endSession}
+                            className="btn-primary"
+                        >
+                            Continue
+                        </button>
+                    </div>
+                    
+                </Modal>
             } 
             </div>
             

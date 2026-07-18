@@ -7,28 +7,26 @@ import Card from "../components/Card";
 import { useTimer } from "../hooks/useTimer";
 import { useOutletContext } from "react-router-dom";
 import MiniMap from "../components/MiniMap";
+import clsx from "clsx";
+
+type LayoutOutletContext = {
+    audioRef: React.RefObject<HTMLAudioElement | null>
+    setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>
+    isHideCard: boolean
+}
 
 const fakeSession: SessionSchedule = {
       schedule: [
           [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
-          [8, 25],
       ],
       cycle_focus_seconds: 8,
       cycle_break_seconds: 25,
-    }
+}
 
 const TimerPage = () => {
     const { isAuthenticated } = useAuth()
     const { sessionInfo, setSessionInfo, startTimeRef} = useTimer()
-    const { audioRef, setIsPlaying } = useOutletContext<{audioRef: React.RefObject<HTMLAudioElement | null>; setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>}>()
+    const { audioRef, setIsPlaying, isHideCard } = useOutletContext<LayoutOutletContext>()
     const handleOnSessionStart = (data: SessionSchedule | SessionResponse) => {
         setSessionInfo(data)
         startTimeRef.current = Date.now()
@@ -43,7 +41,7 @@ const TimerPage = () => {
     return (
     <>
     <div className="flex justify-center items-center h-full">
-        <div className="relative w-[400px] max-h-[600px] h-full">
+        <div className={clsx("relative w-[400px] max-h-[600px] h-full", isHideCard && "hidden")}>
             <Card>
                 {sessionInfo 
                 ?

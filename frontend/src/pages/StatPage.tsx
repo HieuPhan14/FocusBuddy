@@ -5,6 +5,7 @@ import getErrorMessage from "../utils/errorUtils";
 import { getAllSessions } from "../services/session";
 import type { PaginatedSessionResponse } from "../types/session";
 import { formatTime } from "../lib/timer";
+import Loading from "../components/Loading";
 
 const StatPage = () => {
     
@@ -77,7 +78,7 @@ const StatPage = () => {
     return (
     <>
         <div>
-            {isLoading ? <div>Loading</div> :
+            {isLoading ? <Loading /> :
             <div>
                 {statError && <div>{statError}</div>}
                 {stat &&

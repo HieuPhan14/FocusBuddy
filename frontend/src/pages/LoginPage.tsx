@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import type { LoginCredentials } from "../services/auth";
 import getErrorMessage from "../utils/errorUtils";
+import Loading from "../components/Loading";
 
 const LoginPage = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -49,7 +50,7 @@ const LoginPage = () => {
 
     return (
     <>  
-    {isLoading ? <p>Loading</p> :
+    {isLoading ? <Loading /> :
         <div className="flex flex-col">
             <form
                 className=""

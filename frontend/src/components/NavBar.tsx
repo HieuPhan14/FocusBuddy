@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import PixelIcon from "./PixelIcon";
 import { useEffect, useRef, useState } from "react";
@@ -10,14 +10,18 @@ interface NavBarProps {
     isPlaying: boolean
     volume: number
     handleVolume: (value: number) => void
+    isCardHiding: boolean
+    toggleCardHide: () => void
 }
 
-const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) => {
+const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, toggleCardHide }: NavBarProps) => {
     const { theme, handleTheme} = useTheme()
 
     const {isAuthenticated} = useAuth()
     const [isVolumeOpen, setIsVolumeOpen] = useState<boolean>(false)
     const popoverRef = useRef<HTMLDivElement>(null)
+
+    const location = useLocation()
 
     const themeSelect = (
         <div className="relative">
@@ -79,6 +83,18 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume }: NavBarProps) =
             </div>
             
             <div className="flex items-center gap-3">
+                {location.pathname === "/" &&
+                <button
+                        className="cursor-pointer px-2 py-1 transition hover:bg-input rounded-sm border-2 border-transparent hover:border-border"
+                        onClick={toggleCardHide}
+                    >
+                        {isCardHiding 
+                            ? <PixelIcon name="Magnifying-Glass"/> 
+                            : <PixelIcon name="Magnifying-Glass-Reduce"/> 
+                        }
+                </button>
+                }
+
                 <div 
                     className="group relative flex items-center rounded-sm border-2 border-transparent hover:border-border transition"
                     ref={popoverRef}

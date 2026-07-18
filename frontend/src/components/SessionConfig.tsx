@@ -5,6 +5,7 @@ import {createSession} from "../services/session";
 import PixelIcon from "./PixelIcon";
 import InfoTooltip from "./InfoTooltip";
 import modeInfo from "../lib/modeInfo";
+import Loading from "./Loading";
 
 export type SessionMode = "light" | "normal" | "custom" | "intense"
 
@@ -88,7 +89,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
 
     return (
     <>
-        {isLoading ? <p>Loading</p> :
+        {isLoading ? <Loading /> :
         <>
             <form
                 className="flex flex-col gap-4 m-2"

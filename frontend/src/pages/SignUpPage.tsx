@@ -6,6 +6,7 @@ import getErrorMessage from "../utils/errorUtils";
 import { useAuth } from "../hooks/useAuth";
 import type { LoginCredentials } from "../services/auth";
 import passwordValidation from "../utils/passwordValidation";
+import Loading from "../components/Loading";
 
 const SignUpPage = () => {
     const [username, setUsername] = useState<string>("")
@@ -77,7 +78,7 @@ const SignUpPage = () => {
 
     return (
     <>
-        {isLoading ? <p>Loading</p> :
+        {isLoading ? <Loading /> :
         <div className="flex flex-col">
             <form
                 className=""
