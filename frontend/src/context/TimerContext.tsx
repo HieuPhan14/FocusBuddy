@@ -25,6 +25,24 @@ interface TimerContextType {
 
     duckState: DuckInfo | null
     setDuckState: React.Dispatch<React.SetStateAction<DuckInfo | null>>
+
+    isBatAlive: boolean
+    setIsBatAlive: React.Dispatch<React.SetStateAction<boolean>>
+    batAnimation: string
+    setBatAnimation: React.Dispatch<React.SetStateAction<string>>
+    isBatOnMap: boolean
+    setIsBatOnMap: React.Dispatch<React.SetStateAction<boolean>>
+
+    isChestOpen: boolean
+    setIsChestOpen: React.Dispatch<React.SetStateAction<boolean>>
+
+    cameraWidth: number
+    setCameraWidth: React.Dispatch<React.SetStateAction<number>>
+    cameraHeight: number
+    setCameraHeight: React.Dispatch<React.SetStateAction<number>>
+
+    manualCameraCenter: {x: number, y: number} | null
+    setManualCameraCenter: React.Dispatch<React.SetStateAction<{x: number, y: number} | null>>
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -37,7 +55,17 @@ const TimerProvider = ( { children }: TimerProviderProps) => {
     const elapsedTimeRef = useRef<number>(0)
     const isPausedRef = useRef<boolean>(false)
     const accumulatedBeforeRef = useRef<number>(0)
+
     const [duckState, setDuckState] = useState<DuckInfo | null>(null)
+    const [isBatAlive, setIsBatAlive] = useState<boolean>(true)
+    const [batAnimation, setBatAnimation] = useState<string>("animate-bat-idle-left bg-[url('/frame/animals/bat/Bat_Idle.png')]")
+    const [isBatOnMap, setIsBatOnMap ] = useState<boolean>(true)
+    const [isChestOpen, setIsChestOpen] = useState<boolean>(false)
+
+    const [cameraWidth, setCameraWidth] = useState<number>(0)
+    const [cameraHeight, setCameraHeight] = useState<number>(0)
+
+    const [manualCameraCenter, setManualCameraCenter] = useState<{x: number, y: number} | null>(null)
 
     const togglePause = (): void => {
         if (!isPausedRef.current){
@@ -62,7 +90,7 @@ const TimerProvider = ( { children }: TimerProviderProps) => {
     
     return (
         <TimerContext.Provider 
-            value={{duckState, setDuckState, isPaused, setIsPaused, togglePause, isCompleted, setIsCompleted, endSession, sessionInfo, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef,
+            value={{manualCameraCenter, setManualCameraCenter, cameraHeight, cameraWidth, setCameraHeight, setCameraWidth, isChestOpen, setIsChestOpen, isBatAlive, setIsBatAlive, batAnimation, setBatAnimation, isBatOnMap, setIsBatOnMap, duckState, setDuckState, isPaused, setIsPaused, togglePause, isCompleted, setIsCompleted, endSession, sessionInfo, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef,
                 setSessionInfo
             }}
         >

@@ -1,9 +1,11 @@
-import type { DuckInfo } from "./route"
+const MAP_WIDTH = 640
+const MAP_HEIGHT = 672
+export const SCALE = 2
 
-const camera = (MAP_WIDTH: number, MAP_HEIGHT: number, duckState: DuckInfo | null, cameraWidth: number, cameraHeight:number, SCALE: number): {tx: number, ty: number} => {
+const camera = ({x, y}: {x: number, y: number}, cameraWidth: number, cameraHeight:number): {tx: number, ty: number} => {
     // which map coordinates sitting at camera top left corner
-    const cameraTopLeftX = ((duckState?.x ?? 0) + 24) - (cameraWidth / 2) / SCALE
-    const cameraTopLeftY = ((duckState?.y ?? 0) + 24) - (cameraHeight / 2) / SCALE
+    const cameraTopLeftX = x - (cameraWidth / 2) / SCALE
+    const cameraTopLeftY = y - (cameraHeight / 2) / SCALE
     // ----------------------------
 
     const cameraX = Math.max(0, Math.min(MAP_WIDTH - cameraWidth / SCALE, cameraTopLeftX))
