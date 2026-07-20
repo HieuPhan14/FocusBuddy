@@ -50,7 +50,7 @@ const Layout = () => {
                 <NavBar isCardHiding={isHideCard} toggleCardHide={toggleCardHide} toggleMusic={toggleMusic} isPlaying={isPlaying} volume={volume} handleVolume={handleVolume}/>
             </div>
 
-            <main className="flex-1 h-full relative z-10">
+            <main className="flex-1 h-full relative z-10 min-h-0">
                 <Outlet context={{ audioRef, setIsPlaying, isHideCard }}/>
             </main>
         </div>

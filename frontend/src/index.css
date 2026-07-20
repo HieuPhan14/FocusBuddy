@@ -57,6 +57,9 @@
   /* accent gold + primary sage stay — they pop on dark too */
 }
 
+/* firefox scrollbar */
+*{scrollbar-width: thin; scrollbar-color: var(--color-border) var(--color-surface-alt);}
+
 @layer base {
   body {
     font-family: var(--font-body);

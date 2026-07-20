@@ -168,7 +168,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                                 transition: hasPositioned ? "transform 250ms linear" : "none",
                                 transformOrigin: "top left"
                             }}
-                        >
+                        >   
                             <MapScene />
                         </div>
                     </div>
@@ -293,7 +293,7 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                 }
             {isCompleted && 
                 <Modal title="Session Complete">
-                    <div className="flex flex-col items-center gap-2 text-center">
+                    <div className="flex flex-col items-center gap-4 text-center">
                         <p className="font-display text-text">
                             You nailed this session. 🎉🎉🎉
                         </p>

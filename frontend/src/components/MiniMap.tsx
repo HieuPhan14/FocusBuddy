@@ -37,7 +37,7 @@ const MiniMap = () => {
     return (
     <>
         <div 
-            className="hidden sm:block box-content border-2 border-border rounded-sm shadow-[4px_4px_0_rgba(74,63,53,0.35)] bg-surface absolute w-[160px] h-[168px] left-full ml-8 top-0 overflow-hidden"
+            className="hidden min-[800px]:block box-content border-2 border-border rounded-sm shadow-[4px_4px_0_rgba(74,63,53,0.35)] bg-surface absolute w-[160px] h-[168px] left-full ml-8 top-0 overflow-hidden"
             ref={minimapRef}
             onMouseDown={(e) => { 
                 e.preventDefault()

@@ -9,7 +9,7 @@ import { useOutletContext } from "react-router-dom";
 import MiniMap from "../components/MiniMap";
 import clsx from "clsx";
 
-type LayoutOutletContext = {
+export type LayoutOutletContext = {
     audioRef: React.RefObject<HTMLAudioElement | null>
     setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>
     isHideCard: boolean

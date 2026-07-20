@@ -62,7 +62,10 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
     return (
         <div className="flex bg-surface border-b-4 border-border font-display items-center justify-between px-6 py-1">
             <div className="flex items-center gap-6">
-                <div className="text-xl text-accent tracking-wide">Focus Ducky</div>
+                <div className="text-xl text-accent tracking-wide">
+                    <NavLink to="/">Focus Ducky</NavLink>
+                </div>
+
 
                 <div className="flex items-center gap-4 text-text">
                     <NavLink to="/" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Timer</NavLink>
