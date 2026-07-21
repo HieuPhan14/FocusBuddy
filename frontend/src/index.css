@@ -83,6 +83,17 @@
   @apply font-body font-medium
 }
 
+.badge-completed {
+  @apply font-body font-medium text-xs px-2 py-0.5 rounded-full border capitalize bg-primary/20 text-primary border-primary/40
+}
+
+.badge-abandoned {
+  @apply font-body font-medium text-xs px-2 py-0.5 rounded-full border capitalize bg-error/10 text-muted border-border-light
+}
+
+.badge-progress {
+  @apply font-body font-medium text-xs px-2 py-0.5 rounded-full border capitalize bg-surface-alt text-muted border-border-light
+}
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 

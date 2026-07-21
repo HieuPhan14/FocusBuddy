@@ -14,15 +14,17 @@ import Modal from "./Modal";
 interface TimerProps {
     session: SessionSchedule
     handleComplete: () => Promise<void>
+    handleAbandoned: () => Promise<void>
 }
 
-const Timer = ( {session, handleComplete}: TimerProps ) => {
+const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
     const {manualCameraCenter, setManualCameraCenter, cameraWidth, cameraHeight, setCameraWidth, setCameraHeight, setIsChestOpen, setIsBatAlive, setBatAnimation, setIsBatOnMap, duckState, setDuckState, isPaused, togglePause, endSession, isCompleted, setIsCompleted, startTimeRef, elapsedTimeRef, isPausedRef, accumulatedBeforeRef} = useTimer()
 
     const scrollRef = useRef<HTMLDivElement>(null)
     const cameraRef = useRef<HTMLDivElement>(null)
 
     const [displayInfo, setDisplayInfo] = useState<PhaseInfo | null>(null)
+    const [isAbandoned, setIsAbandoned] = useState<boolean>(false)
 
     const BAT_HIT_DURATION = 6
     const BAT_HIT_DELAY = 0.75
@@ -199,6 +201,13 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                         >
                             <PixelIcon name="Cursor"/>
                         </button>
+
+                        <button
+                            className="cursor-pointer hover:bg-input transition border-border px-2 py-1 rounded-sm border-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                            onClick={() => setIsAbandoned(true)}
+                        >
+                            <PixelIcon name="Exit"/>
+                        </button>
                     </div>
                 </div>
 
@@ -305,6 +314,32 @@ const Timer = ( {session, handleComplete}: TimerProps ) => {
                             className="btn-primary"
                         >
                             Continue
+                        </button>
+                    </div>
+                    
+                </Modal>
+            } 
+
+            {isAbandoned && 
+                <Modal title="Session abandon" onClose={() => setIsAbandoned(false)}>
+                    <div className="flex flex-col items-center gap-4 text-center">
+                        <p className="font-display text-text">
+                            You want to give up this session? 😢😭
+                        </p>
+                        <p className="font-display text-text">
+                            This action can't go back.
+                        </p>
+                        <p className="body-text text-muted text-sm">
+                            Click the button to end.
+                        </p>
+                        <button
+                            onClick={() => {
+                                handleAbandoned(); 
+                                endSession()
+                            }}
+                            className="btn-primary"
+                        >
+                            End session
                         </button>
                     </div>
                     

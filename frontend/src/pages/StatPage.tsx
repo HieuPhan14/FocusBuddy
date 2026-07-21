@@ -7,6 +7,15 @@ import type { PaginatedSessionResponse } from "../types/session";
 import { formatTime } from "../lib/timer";
 import Loading from "../components/Loading";
 import BigCard from "../components/BigCard";
+import PixelIcon from "../components/PixelIcon";
+import clsx from "clsx";
+
+const statusBadgeClass: Record<string, string> = {
+    completed: "badge-completed",
+    abandoned: "badge-abandoned",
+    in_progress: "badge-progress",
+}
+
 
 const StatPage = () => {
     
@@ -87,22 +96,34 @@ const StatPage = () => {
                     
                     {stat &&
                         <div
-                            className="flex flex-col font-display text-text text-lg mx-2"
+                            className="grid grid-cols-2 gap-3"
                         >
-                            <div>Total focus time: 
-                                <span className="font-number text-2xl mx-2">
+                            <div className="inner-panel-row flex flex-col items-center gap-1 p-3">
+                                <PixelIcon name="Clock" /> 
+                                <span className="font-number text-3xl text-accent">
                                     {stat.total_focus_time}
-                                </span> hours
-                            </div>
-                            
-                            <div>Number of completed session: 
-                                <span className="font-number text-2xl mx-2">
-                                    {stat.number_of_completed_sessions}
+                                </span> 
+                                
+                                <span className="font-display text-sm text-muted">
+                                    hours focused
                                 </span>
                             </div>
-                            
-                            <div>Date of last session: 
-                                {stat.last_session_date 
+
+                            <div className="inner-panel-row flex flex-col items-center gap-1 p-3">
+                                <PixelIcon name="Check" /> 
+                                <span className="font-number text-3xl text-accent">
+                                    {stat.number_of_completed_sessions}
+                                </span> 
+                                
+                                <span className="font-display text-sm text-muted">
+                                    sessions done
+                                </span>
+                            </div>
+
+                            <div className="inner-panel-row flex flex-col items-center gap-1 p-3">
+                                <PixelIcon name="Calendar" /> 
+                                <span className="font-number text-3xl text-accent">
+                                    {stat.last_session_date 
                                     ?   
                                     <span className="text-lg mx-2">
                                         {new Date(stat.last_session_date).toLocaleString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
@@ -112,12 +133,22 @@ const StatPage = () => {
                                         ))} 
                                     </span>
                                     :   "No sessions yet"
-                                }
+                                    }
+                                </span> 
+                                
+                                <span className="font-display text-sm text-muted">
+                                    last session date and time
+                                </span>
                             </div>
-
-                            <div>Longest streak: 
-                                <span className="font-number text-2xl mx-2">
-                                    {stat.longest_streak}   
+                        
+                            <div className="inner-panel-row flex flex-col items-center gap-1 p-3">
+                                <PixelIcon name="Star" /> 
+                                <span className="font-number text-3xl text-accent">
+                                    {stat.longest_streak}
+                                </span> 
+                                
+                                <span className="font-display text-sm text-muted">
+                                    days streak
                                 </span>
                             </div>
                         </div>
@@ -129,17 +160,12 @@ const StatPage = () => {
                     {sessionsInfoError && <div className="text-error body-text inner-panel-row mt-3">{sessionsInfoError}</div>}
                     {sessionInfo && 
                     <div className="flex flex-col font-display text-text text-lg mx-2">
-                        {sessionInfo.sessions.map((session, i) =>
+                        {sessionInfo.sessions.map((session) =>
                             <div key={session.id} className="inner-panel-row m-3 mx-5">
-                                <div>Session number: 
-                                    <span className="font-number text-xl mx-2">
-                                        {i+1}
-                                    </span>
-                                </div>
-
+                                
                                 <div>Status: 
-                                    <span className="mx-2">
-                                        {session.status}
+                                    <span className={clsx("mx-2", statusBadgeClass[session.status])}>
+                                        {session.status === "in_progress" ? "In Progress" : session.status}
                                     </span>
                                 </div>
 

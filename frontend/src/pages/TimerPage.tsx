@@ -38,6 +38,12 @@ const TimerPage = () => {
         }
     }
 
+    const handleOnAbandon = async () => {
+        if (isAuthenticated && sessionInfo && 'id' in sessionInfo){
+            await markCompleted(sessionInfo.id, {status: "abandoned"})
+        }
+    }
+
     return (
     <>
     <div className="flex justify-center items-center h-full">
@@ -46,7 +52,7 @@ const TimerPage = () => {
                 {sessionInfo 
                 ?
                     // <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
-                    <Timer session={fakeSession} handleComplete={handleOnComplete}/>
+                    <Timer session={fakeSession} handleComplete={handleOnComplete} handleAbandoned={handleOnAbandon}/>
                 :
                     <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated} audioRef={audioRef} setIsPlaying={setIsPlaying}/>
                 }

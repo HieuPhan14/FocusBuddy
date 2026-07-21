@@ -11,7 +11,7 @@ const PixelIcon = ( {name, size="w-5 h-5"}: PixelIconProps ) => {
     return (
         <img 
             src={`/icons/${lightMode}/${name}.png`}
-            className={`[image-rendering:pixelated] ${size}`} 
+            className={`${size}`} 
             alt=""
         />
     )
