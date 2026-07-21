@@ -114,7 +114,29 @@ async def create_session_no_auth(
     session: SessionCreate
 ):
     return generate_schedule(session)
+
         
+async def update_stale_in_progress_sessions_status(
+    current_user: CurrentUser,
+    db: Annotated[AsyncSession, Depends(get_db)],
+):
+    result = await db.execute(
+        select(Session).
+        where(Session.user_id == current_user.id, Session.status == SessionStatus.in_progress)
+    )
+    sessions = result.scalars().all()
+
+    stale_session = []
+    for session in sessions:
+        time = timedelta(seconds=session.session_planned_seconds + settings.grace_buffer) + session.started_at
+        if datetime.now(UTC) > time:
+            session.status = SessionStatus.abandoned
+            session.ended_at = session.started_at
+            stale_session.append(session)
+
+    await db.commit()
+    return stale_session
+
 
 @router.get("", response_model=PaginatedSessionResponse)
 async def get_sessions(
@@ -123,6 +145,8 @@ async def get_sessions(
     skip: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=100)] = settings.sessions_per_page
 ):
+
+    await update_stale_in_progress_sessions_status(current_user, db)
     
     count_result = await db.execute(
         select(func.count()).
@@ -157,6 +181,8 @@ async def get_user_stats(
     db:  Annotated[AsyncSession, Depends(get_db)],
     current_user: CurrentUser,
 ):
+    await update_stale_in_progress_sessions_status(current_user, db)
+    
     result = await db.execute(
         select(Session).
         where(Session.user_id == current_user.id).
@@ -261,7 +287,6 @@ async def update_session_status(
     await db.commit()
     await db.refresh(session, attribute_names=["owner"])
     return session
-
 
 @router.delete("/{session_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_session(

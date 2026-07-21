@@ -15,14 +15,6 @@ export type LayoutOutletContext = {
     isHideCard: boolean
 }
 
-const fakeSession: SessionSchedule = {
-      schedule: [
-          [8, 25],
-      ],
-      cycle_focus_seconds: 8,
-      cycle_break_seconds: 25,
-}
-
 const TimerPage = () => {
     const { isAuthenticated } = useAuth()
     const { sessionInfo, setSessionInfo, startTimeRef} = useTimer()
@@ -51,8 +43,7 @@ const TimerPage = () => {
             <Card>
                 {sessionInfo 
                 ?
-                    // <Timer session={sessionInfo} handleComplete={handleOnComplete}/>
-                    <Timer session={fakeSession} handleComplete={handleOnComplete} handleAbandoned={handleOnAbandon}/>
+                    <Timer session={sessionInfo} handleComplete={handleOnComplete} handleAbandoned={handleOnAbandon}/>
                 :
                     <SessionConfig sessionStart={handleOnSessionStart} isAuth={isAuthenticated} audioRef={audioRef} setIsPlaying={setIsPlaying}/>
                 }

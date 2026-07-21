@@ -158,81 +158,87 @@ const StatPage = () => {
 
                 <div>
                     {sessionsInfoError && <div className="text-error body-text inner-panel-row mt-3">{sessionsInfoError}</div>}
+                    
                     {sessionInfo && 
-                    <div className="flex flex-col font-display text-text text-lg mx-2">
-                        {sessionInfo.sessions.map((session) =>
-                            <div key={session.id} className="inner-panel-row m-3 mx-5">
-                                
-                                <div>Status: 
-                                    <span className={clsx("mx-2", statusBadgeClass[session.status])}>
-                                        {session.status === "in_progress" ? "In Progress" : session.status}
-                                    </span>
-                                </div>
+                    <>
+                        {sessionInfo.sessions.length === 0 && <div className="flex justify-center text-text mt-10 text-lg font-display">No sessions yet - start your first focus session!</div>} 
+                        <div className="flex flex-col font-display text-text text-lg mx-2">
+                            {sessionInfo.sessions.map((session) => {
+                                const durationSeconds = session.ended_at ? (new Date(session.ended_at).getTime() - new Date(session.started_at).getTime())/1000 : 0
 
-                                <div>Started at: 
-                                    {session.started_at
-                                        ? 
-                                        <span className="text-lg mx-2">
-                                            {new Date(session.started_at).toLocaleString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
-                                                <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-xl"}>
-                                                    {chunk}
+                                return(
+                                    <div key={session.id} className="inner-panel-row m-2 mx-5">
+                                        <div className="flex items-center justify-between gap-2">
+                                            <div>Status: 
+                                                <span className={clsx("ml-1", statusBadgeClass[session.status])}>
+                                                    {session.status === "in_progress" ? "In Progress" : session.status}
                                                 </span>
-                                            ))} 
-                                        </span>
+                                            </div>
 
-                                        : "No date to show"
-                                    }
-                                    
-                                </div>
+                                            <div className="flex text-sm items-center text-muted">
+                                                <div className="h-5">Mode: 
+                                                    <span className="ml-1">
+                                                        {session.mode}
+                                                    </span>
+                                                </div>
 
-                                <div>Ended at: 
-                                    {session.ended_at 
-                                        ? 
-                                        <span className="text-lg mx-2">
-                                            {new Date(session.ended_at).toLocaleString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
-                                                <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-xl"}>
-                                                    {chunk}
+                                                <span className="mx-1">·</span>
+
+                                                <div className="h-5">Planned time: 
+                                                    <span className="ml-1">
+                                                            {formatTime(session.session_planned_seconds).match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
+                                                                <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number"}>
+                                                                    {chunk}
+                                                                </span>
+                                                            ))} 
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {session.status === "abandoned" && 
+                                            <div>Completion:                                         
+                                                <span className="ml-2 font-number">{Math.min(100, (durationSeconds / session.session_planned_seconds)*100).toFixed(2)}</span>    
+                                                <span>%</span>   
+                                            </div>
+                                        }
+
+                                        <div>Started at: 
+                                            {session.started_at
+                                                ? 
+                                                <span className="text-lg ml-2">
+                                                    {new Date(session.started_at).toLocaleString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
+                                                        <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-xl"}>
+                                                            {chunk}
+                                                        </span>
+                                                    ))} 
                                                 </span>
-                                            ))} 
-                                        </span>
-                                        : "No date to show"
-                                    }
-                                </div>
 
-                                <div>Mode: 
-                                    <span className="mx-2">
-                                        {session.mode}
-                                    </span>
-                                </div>
+                                                : "No date to show"
+                                            }
+                                            
+                                        </div>
+                                    </div>                  
+                                )
+                            })}
 
-                                <div>Session planned time: 
-                                    <span className="text-lg mx-2">
-                                            {formatTime(session.session_planned_seconds).match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
-                                                <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-xl"}>
-                                                    {chunk}
-                                                </span>
-                                            ))} 
-                                        </span>
-                                </div>
-                            </div>   
-                        )}
-
-                        {sessionInfo.has_more &&
-                            <button
-                                className="btn-secondary m-5"
-                                disabled={isLoadMoreLoading}
-                                onClick={() => {
-                                    skipRef.current += 10
-                                    loadSession()
-                                }}
-                            >
-                                Load More
-                            </button>
-                        }
-                    </div>
+                            {sessionInfo.has_more &&
+                                <button
+                                    className="btn-secondary m-5"
+                                    disabled={isLoadMoreLoading}
+                                    onClick={() => {
+                                        skipRef.current += 10
+                                        loadSession()
+                                    }}
+                                >
+                                    Load More
+                                </button>
+                            }
+                        </div>
+                    </>
                     }
 
-                    {isLoadMoreLoading && <div>Loading more sessions</div>}
+                    {isLoadMoreLoading && <div className="mb-5 flex justify-center text-muted text-sm font-display">Loading more sessions</div>}
                     
                 </div>
                 

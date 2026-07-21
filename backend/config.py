@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     reset_token_expire_minutes: int = 60
 
+    grace_buffer: int = 5
     sessions_per_page: int = 10
 
     # S3 Configuration

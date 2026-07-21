@@ -80,6 +80,10 @@ const TimerProvider = ( { children }: TimerProviderProps) => {
     }
 
     const endSession = () => {
+        setBatAnimation("animate-bat-idle-left bg-[url('/frame/animals/bat/Bat_Idle.png')]")
+        setIsChestOpen(false)
+        setIsBatOnMap(true)
+        setIsBatAlive(true)
         setIsCompleted(false)
         setSessionInfo(null)
         startTimeRef.current = Date.now()
