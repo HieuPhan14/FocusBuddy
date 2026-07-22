@@ -4,6 +4,7 @@ import type { UserPrivate } from "../types/user"
 export interface Token {
     access_token: string
     token_type: string
+    refresh_token: string
 }
 
 export interface LoginCredentials {
@@ -22,6 +23,13 @@ const getToken = async (form: LoginCredentials): Promise<Token> => {
     return response.data
 }
 
+const revokeRefreshToken = async (refresh_token: string): Promise<void> => {
+    await api.post<void>(
+        "/api/users/token/revoke",
+        {"token": refresh_token}
+    )
+}
+
 const getUser = async (): Promise<UserPrivate> => {
     const response = await api.get<UserPrivate>(
         "/api/users/me",
@@ -29,4 +37,4 @@ const getUser = async (): Promise<UserPrivate> => {
     return response.data
 }
 
-export { getToken, getUser }
+export { getToken, getUser, revokeRefreshToken }

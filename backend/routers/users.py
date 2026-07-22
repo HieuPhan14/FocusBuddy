@@ -155,6 +155,22 @@ async def refresh_token(
     return Token(access_token=access_token, token_type="bearer", refresh_token=request_data.token)
     
 
+@router.post("/token/revoke", status_code=status.HTTP_200_OK)
+async def revoke(
+    request_data: RefreshTokenRequest,
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    token_hash = hash_token(request_data.token)
+
+    await db.execute(
+        sql_delete(RefreshToken).
+        where(RefreshToken.token_hash == token_hash)
+    )
+
+    await db.commit()
+    return {"message": "Refresh token revoked successfully"}
+    
+
 @router.get("/me", response_model=UserPrivate)
 async def get_current_user(current_user: CurrentUser):
     return current_user

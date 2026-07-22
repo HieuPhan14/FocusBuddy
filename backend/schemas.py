@@ -51,6 +51,7 @@ class Token(BaseModel):
 
 class RefreshTokenRequest(BaseModel):
     token: str
+    
 
 class ForgetPasswordRequest(BaseModel):
     email: EmailStr = Field(max_length=120)

@@ -88,7 +88,7 @@ const ProfilePage = () => {
     const handleDeleteUser = async () => {
         try{
             await deleteUser(user.id)
-            logout()
+            await logout()
         } catch (error){
             setErrorDeleteUser(getErrorMessage(error))
         }

@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react'
-import { getUser, getToken } from "../services/auth"
+import { getUser, getToken, revokeRefreshToken } from "../services/auth"
 import type { LoginCredentials } from "../services/auth"
 import type { UserPrivate } from '../types/user'
 import getErrorMessage from '../utils/errorUtils'
@@ -12,7 +12,7 @@ interface AuthContextType {
     user: UserPrivate | null
     token: string | null
     login: (credentials: LoginCredentials) => Promise<void>
-    logout: () => void
+    logout: () => Promise<void>
     isAuthenticated: boolean
     isLoading: boolean
     error: string | null
@@ -55,6 +55,7 @@ const AuthProvider = ({children}: AuthProviderProps) => {
             setIsLoading(true)
             const token = await getToken(credentials)
             localStorage.setItem("token", token.access_token)
+            localStorage.setItem("refresh_token", token.refresh_token)
             const user = await getUser()
             setToken(token.access_token)
             setUser(user)
@@ -67,11 +68,20 @@ const AuthProvider = ({children}: AuthProviderProps) => {
         }
     }
 
-    const logout = (): void => {
+    const logout = async (): Promise<void> => {
+        const refresh_token = localStorage.getItem("refresh_token")
+
+        try{
+            if (refresh_token)
+                await revokeRefreshToken(refresh_token)
+        } catch {
+            // logout should still succeed even if this fails, placeholder only
+        }
             setError(null)
             setToken(null)
             setUser(null)
             localStorage.removeItem("token")
+            localStorage.removeItem("refresh_token")
     }
 
     return (
