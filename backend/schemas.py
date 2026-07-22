@@ -47,6 +47,10 @@ class UserUpdate(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    refresh_token: str
+
+class RefreshTokenRequest(BaseModel):
+    token: str
 
 class ForgetPasswordRequest(BaseModel):
     email: EmailStr = Field(max_length=120)

@@ -2,7 +2,6 @@ from typing import Annotated
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi.staticfiles import StaticFiles
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -18,8 +17,6 @@ async def lifespan(_app: FastAPI):
     await engine.dispose()
 
 app = FastAPI(lifespan=lifespan)
-
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 origins = ["http://localhost:5173", "http://192.168.1.100:5173"]
 

@@ -11,13 +11,13 @@ from starlette.concurrency import run_in_threadpool
 
 from image_utils import delete_profile_image, process_profile_image, upload_profile_image
 from email_utils import send_password_reset_email
-from models import User, PasswordResetToken
-from auth import CurrentUser, create_access_token, generate_reset_token, hash_password, hash_reset_token, verify_password
+from models import RefreshToken, User, PasswordResetToken
+from auth import CurrentUser, create_access_token, generate_token, hash_password, hash_token, verify_password
 
 from config import settings
 from database import get_db
 
-from schemas import Token, UserCreate, UserPrivate, UserPublic, UserUpdate, ForgetPasswordRequest, ResetPasswordRequest, ChangePasswordRequest
+from schemas import RefreshTokenRequest, Token, UserCreate, UserPrivate, UserPublic, UserUpdate, ForgetPasswordRequest, ResetPasswordRequest, ChangePasswordRequest
 from botocore.exceptions import ClientError
 
 router = APIRouter()
@@ -85,8 +85,75 @@ async def login_for_access_token(
         data={"sub": str(user.id)},
         expires_delta=access_token_expires
     )
-    return Token(access_token=access_token, token_type="bearer")
 
+    token = generate_token()
+    token_hash = hash_token(token)
+    expired_at = datetime.now(UTC) + timedelta(days=settings.refresh_token_expire_days)
+
+    refresh_token = RefreshToken(
+        user_id=user.id,
+        token_hash=token_hash,
+        expires_at=expired_at
+    )
+
+    db.add(refresh_token)
+    await db.commit()
+    
+    return Token(access_token=access_token, token_type="bearer", refresh_token=token)
+
+@router.post("/token/refresh", response_model=Token)
+async def refresh_token(
+    request_data: RefreshTokenRequest,
+    db: Annotated[AsyncSession, Depends(get_db)]
+):
+    token_hash = hash_token(request_data.token)
+
+    result = await db.execute(
+        select(RefreshToken).
+        where(RefreshToken.token_hash == token_hash)
+    )
+    refresh_token = result.scalars().first()
+
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired refresh token"
+        )
+
+    if refresh_token.expires_at < datetime.now(UTC):
+        await db.delete(refresh_token)
+        await db.commit()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired refresh token"
+        )
+    
+    result = await db.execute(
+        select(User).
+        where(User.id == refresh_token.user_id)
+    )
+    user = result.scalars().first()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired refresh token"
+        )
+
+    await db.execute(
+        sql_delete(RefreshToken).
+        where(RefreshToken.user_id == user.id, RefreshToken.expires_at < datetime.now(UTC))
+    )
+    await db.commit()
+
+    access_token_expires = timedelta(minutes=settings.access_token_expire_minutes)
+    access_token = create_access_token(
+        data={"sub": str(user.id)},
+        expires_delta=access_token_expires
+    )
+
+    return Token(access_token=access_token, token_type="bearer", refresh_token=request_data.token)
+    
 
 @router.get("/me", response_model=UserPrivate)
 async def get_current_user(current_user: CurrentUser):
@@ -111,8 +178,8 @@ async def forgot_password(
             where(PasswordResetToken.user_id == user.id)
         )
 
-        token = generate_reset_token()
-        token_hash = hash_reset_token(token)
+        token = generate_token()
+        token_hash = hash_token(token)
         expires_at = datetime.now(UTC) + timedelta(
             minutes=settings.reset_token_expire_minutes
         )
@@ -135,14 +202,14 @@ async def forgot_password(
     return {
         "message": "If an account exists with this email, you will receive password reset instructions."
     }
-    
+
 
 @router.post("/reset-password", status_code=status.HTTP_200_OK)
 async def reset_password(
     request_data: ResetPasswordRequest,
     db: Annotated[AsyncSession, Depends(get_db)]
 ):
-    token_hash = hash_reset_token(request_data.token)
+    token_hash = hash_token(request_data.token)
 
     result = await db.execute(
         select(PasswordResetToken).

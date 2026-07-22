@@ -13,6 +13,8 @@ class Settings(BaseSettings):
     access_token_expire_minutes: int = 30
     reset_token_expire_minutes: int = 60
 
+    refresh_token_expire_days: int = 7
+
     grace_buffer: int = 5
     sessions_per_page: int = 10
 

@@ -21,6 +21,11 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
+    refresh_tokens: Mapped[list[RefreshToken]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
     sessions: Mapped[list[Session]] = relationship(
         back_populates="owner",
         cascade="all, delete-orphan",
@@ -30,7 +35,7 @@ class User(Base):
     def image_path(self) -> str:
         if self.image_file:
             return f"https://{settings.s3_bucket_name}.s3.{settings.s3_region}.amazonaws.com/profile_pics/{self.image_file}"
-        return "/static/profile_pics/avatar.svg"
+        return "/static/profile_pics/duck.png"
     
 
 class PasswordResetToken(Base):
@@ -44,6 +49,19 @@ class PasswordResetToken(Base):
 
     user: Mapped[User] = relationship(
         back_populates="reset_tokens"
+    )
+
+class RefreshToken(Base):
+    __tablename__ = "refresh_tokens"
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True, default=uuid.uuid4)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
+    token_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(UTC))
+
+    user: Mapped[User] = relationship(
+        back_populates="refresh_tokens"
     )
 
 class SessionPreset(str, Enum):
@@ -78,3 +96,4 @@ class Session(Base):
     owner: Mapped[User] = relationship(
         back_populates="sessions"
     )
+
