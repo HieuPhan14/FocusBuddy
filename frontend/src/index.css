@@ -75,6 +75,10 @@
   @apply bg-primary hover:bg-primary-hover text-surface font-display px-4 py-2 rounded-md border-2 border-border transition
 }
 
+.btn-danger {
+  @apply bg-error hover:opacity-90 text-lg text-surface font-display px-4 py-2 rounded-md border-2 border-border transition
+}
+
 .inner-panel-row {
   @apply bg-surface-alt border-2 border-border-light rounded-sm p-3 shadow-[2px_2px_0_rgba(74,63,53,0.35)]
 }

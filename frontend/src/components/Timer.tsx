@@ -322,15 +322,12 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
 
             {isAbandoned && 
                 <Modal title="Session abandon" onClose={() => setIsAbandoned(false)}>
-                    <div className="flex flex-col items-center gap-4 text-center">
+                    <div className="flex flex-col items-center gap-3 text-center">
                         <p className="font-display text-text">
                             You want to give up this session? 😢😭
                         </p>
                         <p className="font-display text-text">
                             This action can't go back.
-                        </p>
-                        <p className="body-text text-muted text-sm">
-                            Click the button to end.
                         </p>
                         <button
                             onClick={() => {
