@@ -20,7 +20,7 @@ const Modal = ( { children, onClose, title }: ModalProps) => {
                 {onClose && 
                 <button 
                     onClick={onClose}
-                    className="cursor-pointer absolute top-2 right-2 border-2 border-border rounded-sm p-1 hover:bg-input transition"
+                    className="cursor-pointer absolute top-2 right-2 border-2 border-transparent hover:border-border rounded-sm p-1 hover:bg-input transition"
                 >
                     <PixelIcon name="X"/>
                 </button>

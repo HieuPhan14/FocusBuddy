@@ -42,6 +42,8 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
     const cameraCoordinates = camera(manualCameraCenter ?? {x: (duckState?.x ?? 0) + 24, y: (duckState?.y ?? 0) + 24}, cameraWidth, cameraHeight)
     const [hasPositioned, setHasPositioned] = useState(false)
 
+    const [syncError, setSyncError] = useState<string | null>(null)
+
     const handleScrollCycle = ():void => {
         scrollRef.current?.scrollIntoView({
             behavior: 'smooth',
@@ -131,7 +133,7 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
     
     useEffect(() => {
         if (isCompleted)
-            handleComplete()
+            handleComplete().catch(() => setSyncError("Failed to save your session"))
     //eslint-disable-next-line
     }, [isCompleted])
 
@@ -204,7 +206,10 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
 
                         <button
                             className="cursor-pointer hover:bg-input transition border-border px-2 py-1 rounded-sm border-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
-                            onClick={() => setIsAbandoned(true)}
+                            onClick={() => {
+                                setIsAbandoned(true)
+                                setSyncError(null)
+                            }}
                         >
                             <PixelIcon name="Exit"/>
                         </button>
@@ -317,6 +322,7 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
                         </button>
                     </div>
                     
+                    {syncError && <div className="text-error body-text inner-panel-row mt-3">{syncError}</div>}
                 </Modal>
             } 
 
@@ -330,9 +336,13 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
                             This action can't go back.
                         </p>
                         <button
-                            onClick={() => {
-                                handleAbandoned(); 
-                                endSession()
+                            onClick={async () => {
+                                try{
+                                    await handleAbandoned(); 
+                                    endSession()
+                                } catch {
+                                    setSyncError("Failed to save your sessions")
+                                }
                             }}
                             className="btn-primary"
                         >
@@ -340,6 +350,7 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
                         </button>
                     </div>
                     
+                    {syncError && <div className="text-error body-text inner-panel-row mt-3">{syncError}</div>}
                 </Modal>
             } 
             </div>
