@@ -1,4 +1,4 @@
-import type { ChangePasswordRequest } from "../types/password";
+import type { ChangePasswordRequest, ForgetPasswordRequest, ResetPasswordRequest } from "../types/password";
 import type { UserPrivate, UserUpdate } from "../types/user";
 import api from "./api";
 
@@ -19,6 +19,20 @@ const changeProfilePicture = async (user_id: string, formData: FormData): Promis
     return response.data
 }
 
+const forgetPassword = async (request: ForgetPasswordRequest): Promise<void> => {
+    await api.post(
+        "/api/users/forgot-password",
+        request
+    )
+}
+
+const resetPassword = async (request: ResetPasswordRequest): Promise<void> => {
+    await api.post(
+        "/api/users/reset-password",
+        request
+    )
+}
+
 const changePassword = async (password_data: ChangePasswordRequest) => {
     await api.patch(
         "/api/users/me/password",
@@ -32,5 +46,6 @@ const deleteUser = async (user_id: string) => {
     )
 }
 
-export {changeUsernameEmail, changeProfilePicture, changePassword, deleteUser};
+
+export {changeUsernameEmail, changeProfilePicture, changePassword, deleteUser, forgetPassword, resetPassword};
 

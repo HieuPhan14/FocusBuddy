@@ -298,11 +298,14 @@ const ProfilePage = () => {
                     <Modal title="Password Update">
                         <div className="flex flex-col items-center gap-3 text-center">
                             
-                            <div className="flex gap-1">
+                            <div className="flex flex-col gap-1">
                                 <p className="font-display text-text">
-                                    Your password was changed. Please log in again.
+                                    Your password was changed.
                                 </p>
-                                <PixelIcon name="Check"/>
+
+                                <p className="font-display text-text">
+                                    Please log in again. 🥳🥳🎊
+                                </p>
                             </div>
 
                             <button
