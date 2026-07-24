@@ -69,6 +69,7 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
 
                 <div className="flex items-center gap-4 text-text">
                     <NavLink to="/" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Timer</NavLink>
+                    
                     {!isAuthenticated 
                         ?
                         <>
@@ -82,6 +83,8 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
                             <NavLink to="/profile" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Profile</NavLink>
                         </>
                     }
+
+                    <NavLink to="/about" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>About</NavLink>
                 </div>
             </div>
             

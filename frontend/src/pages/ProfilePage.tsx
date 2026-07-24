@@ -115,6 +115,7 @@ const ProfilePage = () => {
                         <div className="font-display text-text text-lg">{user.username}</div>
                         <div className="text-muted body-text">{user.email}</div>
                     </div>
+
                 </div>
 
                 <form
