@@ -38,7 +38,7 @@ night) with a companion duck, ambient music
 
 Required environment variables (`backend/.env`) — see `backend/config.py` for the full list:
 
-    DATABASE_URL=postgresql+psycopg://user:password@localhost/focusbuddy
+    DATABASE_URL=postgresql+psycopg://user:password@localhost/focusducky
     SECRET_KEY=your-secret-key
     S3_BUCKET_NAME=your-bucket
     MAIL_SERVER=smtp.resend.com

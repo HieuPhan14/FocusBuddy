@@ -42,7 +42,7 @@ This link will expire in 1 hour.
 If you didn't request this, you can safely ignore this email.
 
 Best Regards,
-FocusBuddy
+FocusDucky
 """
     await send_email(
         to_email=to_email,

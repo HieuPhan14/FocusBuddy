@@ -53,7 +53,8 @@ const AboutPage = () => {
                     <ul className="body-text text-sm text-muted flex flex-col gap-1">
                         <li>Art: Assets from Little Dreamyland by Starmixu & Utaskuas</li>
                         <li>Map: Designed and built by Trung Hieu Phan using Little Dreamyland tiles</li>
-                        <li>Icons: Lucid Icons by Midhil M (CC0 1.0)</li>
+                        <li>Background: Art from CraftPix.net, assembled from multiple packs</li>
+                        <li>Icons: Lucid Icons by Midhil M (CC0 1.0), plus a few hand-drawn</li>
                         <li>Music: "Calm Ambient Tender Piano" via{" "}
                             <a
                                 href="https://pixabay.com/music/modern-classical-calm-ambient-tender-piano-354930/"

@@ -27,7 +27,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
     
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null);
-    
+
     const sessionValidation = (sessionLength: number): boolean => {
         if (sessionLength === 0){
             setError("Please enter at least hours or minutes for your session length.")
@@ -267,6 +267,7 @@ const SessionConfig = ( { sessionStart, isAuth, setIsPlaying, audioRef }: Sessio
                     disabled={isLoading}
                     >Let's Lock In
                 </button>
+
             </form>
         </>
         }
