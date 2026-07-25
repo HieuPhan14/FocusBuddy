@@ -26,6 +26,7 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
     const themeSelect = (
         <div className="relative">
             <select
+                id="theme-select"
                 value={theme}
                 className="[appearance:none] border-2 border-transparent hover:border-border transition hover:bg-input rounded-sm px-2 py-1 text-text pr-6"
                 onChange={(e) => {

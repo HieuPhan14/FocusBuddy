@@ -70,7 +70,7 @@ const AboutPage = () => {
                 <section>
                     <h2 className="font-display text-lg text-text border-b-2 border-border-light pb-1">Who Made It 🐣</h2>
 
-                    <p className="body-text text-sm text-muted mt-2">Trung Hieu Phan -{" "}
+                    <p className="body-text text-sm text-muted mt-2">A solo project from Trung Hieu Phan with love ❤️ -{" "}
                         <a
                             href="https://github.com/HieuPhan14"
                             target="_blank"
