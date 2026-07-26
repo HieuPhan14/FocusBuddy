@@ -39,7 +39,7 @@ const TimerPage = () => {
     return (
     <>
     <div className="flex justify-center items-center h-full">
-        <div className={clsx("relative w-[400px] max-h-[600px] h-full", isHideCard && "hidden")}>
+        <div className={clsx("relative w-full max-w-[432px] max-h-[600px] h-full", isHideCard && "hidden")}>
             <Card>
                 {sessionInfo 
                 ?

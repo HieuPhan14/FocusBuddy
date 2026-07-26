@@ -124,14 +124,33 @@ const StatPage = () => {
                                 <PixelIcon name="Calendar" /> 
                                 <span className="font-number text-3xl text-accent">
                                     {stat.last_session_date 
-                                    ?   
-                                    <span className="text-lg mx-2">
-                                        {new Date(stat.last_session_date).toLocaleString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
-                                            <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-2xl"}>
-                                                {chunk}
+                                    ?
+                                    <>
+                                        <span className="hidden nav:inline text-lg mx-2">
+                                            {new Date(stat.last_session_date).toLocaleString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
+                                                <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-2xl"}>
+                                                    {chunk}
+                                                </span>
+                                            ))} 
+                                        </span>
+
+                                        <span className="flex nav:hidden flex-col items-center gap-1 text-lg">
+                                            <span className="text-lg mx-2">
+                                                {new Date(stat.last_session_date).toLocaleDateString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
+                                                    <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-2xl"}>
+                                                        {chunk}
+                                                    </span>
+                                                ))} 
                                             </span>
-                                        ))} 
-                                    </span>
+                                            <span className="text-lg mx-2">
+                                                {new Date(stat.last_session_date).toLocaleTimeString().match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
+                                                    <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-2xl"}>
+                                                        {chunk}
+                                                    </span>
+                                                ))} 
+                                            </span>
+                                        </span>
+                                    </>   
                                     :   "No sessions yet"
                                     }
                                 </span> 
@@ -167,8 +186,8 @@ const StatPage = () => {
                                 const durationSeconds = session.ended_at ? (new Date(session.ended_at).getTime() - new Date(session.started_at).getTime())/1000 : 0
 
                                 return(
-                                    <div key={session.id} className="inner-panel-row m-2 mx-5">
-                                        <div className="flex items-center justify-between gap-2">
+                                    <div key={session.id} className="inner-panel-row my-2 mx-1 nav:mx-5">
+                                        <div className="flex flex-col cardInfo:flex-row cardInfo:items-center justify-between gap-2">
                                             <div>Status: 
                                                 <span className={clsx("ml-1", statusBadgeClass[session.status])}>
                                                     {session.status === "in_progress" ? "In Progress" : session.status}

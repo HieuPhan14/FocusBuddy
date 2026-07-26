@@ -19,7 +19,10 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
 
     const {isAuthenticated} = useAuth()
     const [isVolumeOpen, setIsVolumeOpen] = useState<boolean>(false)
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false)
+
     const popoverRef = useRef<HTMLDivElement>(null)
+    const mobileMenuRef = useRef<HTMLDivElement>(null)
 
     const location = useLocation()
 
@@ -33,9 +36,9 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
                     handleTheme(e.target.value as BackgroundTheme)
                 }}
             >
-                <option value="summer">Summer</option>
-                <option value="beach">Beach</option>
-                <option value="night">Night</option>
+                <option value="summer" className="bg-surface text-text">Summer</option>
+                <option value="beach" className="bg-surface text-text">Beach</option>
+                <option value="night" className="bg-surface text-text">Night</option>
             </select>
 
             <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
@@ -59,16 +62,34 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
 
         return () => document.removeEventListener("mousedown", handleClickOutside)
     }, [isVolumeOpen])
-    
+
+    useEffect(() => {
+        if (!isMobileMenuOpen) return
+        const handleClickOutside = (e: MouseEvent) => {
+            if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target as Node)){
+                setIsMobileMenuOpen(false)
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside)
+
+        return () => document.removeEventListener("mousedown", handleClickOutside)
+    }, [isMobileMenuOpen])
+
+
     return (
-        <div className="flex bg-surface border-b-4 border-border font-display items-center justify-between px-6 py-1">
-            <div className="flex items-center gap-6">
-                <div className="text-xl text-accent tracking-wide">
-                    <NavLink to="/">Focus Ducky</NavLink>
+        <div className="relative flex bg-surface border-b-4 border-border font-display items-center justify-between px-2 nav:px-6 py-1 h-12">
+            <div className="flex items-center gap-2 nav:gap-6 h-full">
+                <div className="flex-shrink-0">
+                    <NavLink 
+                        to="/"
+                        className="flex flex-col xs:flex-row items-center leading-none xs:leading-normal text-accent xs:text-xl tracking-wide xs:gap-1"
+                    >
+                        <span>Focus</span>
+                        <span>Ducky</span>
+                    </NavLink>
                 </div>
 
-
-                <div className="flex items-center gap-4 text-text">
+                <div className="flex items-center gap-4 text-text hidden nav:flex">
                     <NavLink to="/" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Timer</NavLink>
                     
                     {!isAuthenticated 
@@ -87,9 +108,47 @@ const NavBar = ({ toggleMusic, isPlaying, volume, handleVolume, isCardHiding, to
 
                     <NavLink to="/about" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>About</NavLink>
                 </div>
+
+                <div
+                    ref={mobileMenuRef}
+                    className="relative h-full flex items-center"
+                >
+                    <button 
+                        className="flex nav:hidden cursor-pointer px-2 py-1 transition hover:bg-input rounded-sm border-2 border-transparent hover:border-border"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    >
+                        <PixelIcon name="Bulleted-List"/>
+                    </button>
+
+                    {isMobileMenuOpen &&
+                    <div
+                        className="w-max mt-1 absolute top-full left-1/2 -translate-x-1/2 flex flex-col items-center text-text bg-surface border-x-2 border-border border-b-2 gap-1 nav:hidden px-4 pb-2 pt-1"
+                    >
+                        <NavLink to="/" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Timer</NavLink>
+                    
+                        {!isAuthenticated 
+                            ?
+                            <>
+                                <NavLink to="/login" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Log in</NavLink>
+                                <NavLink to="/signup" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Sign up</NavLink>
+                            </>
+
+                            :
+                            <>
+                                <NavLink to="/stats" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Stats</NavLink>
+                                <NavLink to="/profile" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>Profile</NavLink>
+                            </>
+                        }
+
+                        <NavLink to="/about" className={({isActive}) => isActive ? "text-accent" : "hover:text-accent transition"}>About</NavLink>
+                    </div>
+                    }
+
+                </div> 
+                
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1 nav:gap-3">
                 {location.pathname === "/" &&
                 <button
                         className="cursor-pointer px-2 py-1 transition hover:bg-input rounded-sm border-2 border-transparent hover:border-border"

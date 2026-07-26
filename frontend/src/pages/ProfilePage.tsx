@@ -195,7 +195,7 @@ const ProfilePage = () => {
                 >
                     <div className="font-display text-text text-xl">Profile Picture</div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col xs:items-center xs:flex-row gap-2">
                         <input 
                             id="fileUpload"
                             className="hidden"
@@ -214,7 +214,7 @@ const ProfilePage = () => {
                             }}
                         />
 
-                        <div>
+                        <div className="my-4 xs:my-0">
                             <label htmlFor="fileUpload" className="btn-secondary cursor-pointer !rounded-r-none">
                                 Choose File
                             </label>
@@ -227,7 +227,7 @@ const ProfilePage = () => {
                         </div>
 
                         <button 
-                            className="btn-primary"
+                            className="btn-primary mb-2 xs:mb-0"
                             type="submit"
                         >
                                 Upload

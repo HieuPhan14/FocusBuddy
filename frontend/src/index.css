@@ -43,6 +43,11 @@
   --font-display: "Pixelify Sans", sans-serif;
   --font-body: "Nunito", system-ui, sans-serif;
   --font-number: "VT323", monospace;
+
+  /* breakpoint */
+  --breakpoint-xs: 450px;
+  --breakpoint-nav: 680px;
+  --breakpoint-cardInfo: 500px;
 }
 
 .theme-night {

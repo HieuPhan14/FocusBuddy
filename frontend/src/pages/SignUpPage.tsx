@@ -165,8 +165,11 @@ const SignUpPage = () => {
                     {error && error.split("\n").map((msg, i) => 
                         <div key={i} className="text-error body-text inner-panel-row mt-3">{msg}</div>)}
 
-                    {passwordErr.length > 0 && passwordErr.map((msg, i) => 
-                        <div key={i} className="text-error body-text inner-panel-row mt-3">{msg}</div>)}
+                    {passwordErr.length > 0 &&  
+                        <div className="text-error body-text inner-panel-row mt-3 flex flex-col gap-1">
+                            {passwordErr.map((msg, i) => <div key={i}>{msg}</div>)}
+                        </div>
+                    }
 
                     <button 
                         type="submit"
@@ -176,7 +179,7 @@ const SignUpPage = () => {
                     </button>
                 </form>
 
-                <div className="flex flex-col body-text text-muted gap-1 mx-2 mt-4">
+                <div className="flex flex-col body-text text-muted gap-1 mx-2 mt-4 mb-5">
                     <div className="flex">
                         <p>Already have an account?</p>
                         <Link to="/login" className="hover:text-primary transition ml-1">Log in</Link>

@@ -121,10 +121,19 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
     }, [setIsBatAlive, setIsBatOnMap, setIsChestOpen, setDuckState, handleBatAnimation, setIsCompleted, session.schedule, total_session_planned, accumulatedBeforeRef, elapsedTimeRef, isPausedRef, startTimeRef, duckTimeline]);
     
     useEffect(() => {
-        if (cameraRef.current){
-            setCameraWidth(cameraRef.current.clientWidth)
-            setCameraHeight(cameraRef.current.clientHeight)
-        }
+        if (!cameraRef.current) return
+        
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                setCameraWidth(entry.contentRect.width)
+                setCameraHeight(entry.contentRect.height)
+            }
+        })
+
+        observer.observe(cameraRef.current)
+
+        return () => observer.disconnect()
+
     }, [setCameraHeight, setCameraWidth])
 
     useEffect(() => {
@@ -220,6 +229,7 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
                 displayInfo &&
 
                 <div className="flex h-2/5 justify-around pb-2 min-h-[220px]">
+                    
                     
                     <div className="flex flex-col text-text body-text justify-between">
 
