@@ -228,10 +228,11 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
                 {
                 displayInfo &&
 
-                <div className="flex h-2/5 justify-around pb-2 min-h-[220px]">
+                <div className="flex h-2/5 justify-around pb-2 min-h-[220px] gap-0.5 px-0.5 min-[416px]:gap-0 min-[416px]:px-0">
                     
-                    
-                    <div className="flex flex-col text-text body-text justify-between">
+
+                    {/* 416px and up */}
+                    <div className="hidden min-[416px]:flex flex-col text-text body-text justify-between">
 
                         <div className="inner-panel-row !py-1">
                             <div className="flex gap-2 items-center">
@@ -272,6 +273,49 @@ const Timer = ( {session, handleComplete, handleAbandoned}: TimerProps ) => {
 
                     </div>
 
+                    {/* below 416px */}
+                    <div className="inner-panel-row flex min-[416px]:hidden flex-col text-text body-text gap-2 overflow-y-auto min-h-0 !py-2 !px-0 divide-y-2 divide-border-light overflow-x-hidden">
+
+                        <div className="px-2 pb-2">
+                            <div className="flex gap-2 items-center justify-between">
+                                <div className="font-display">Time remaining</div>
+                                <PixelIcon name="Clock" size="w-4 h-4 max-[349px]:hidden"/>
+                            </div>
+
+                            <div>
+                                <div className="text-accent text-2xl font-number">{formatTimeRemaining(displayInfo.timeLeftInPhase)}</div>
+                            </div>
+                        </div>
+
+                        <div className="pb-2 px-2">
+                            <div className="flex gap-2 items-center justify-between">
+                                <div className="font-display">Total focus</div>
+                                <PixelIcon name="Heart" size="w-4 h-4 max-[349px]:hidden"/>
+                            </div>
+                            <div>
+                                {formatTime(displayInfo.focusAccumulated).match(/[a-zA-Z]+|[^a-zA-Z]+/g)?.map((chunk, i) => (
+                                    <span key={i} className={/[a-zA-Z]/.test(chunk) ? "font-display" : "font-number text-xl"}>
+                                        {chunk}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="px-2">
+                            <div className="flex gap-2 items-center justify-between">
+                                <div className="font-display">Session progress</div>
+                                <PixelIcon name="Signal" size="w-4 h-4 max-[349px]:hidden"/>
+                            </div>
+                            
+                            <div className="font-number text-xl">
+                                {displayInfo.percentSessionElapsed}
+                                <span className="font-display text-sm ml-1">%</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {/* Right div */}
                     <div className="flex flex-col inner-panel-row !p-2 !pt-0 font-display text-text">
                         <div className="border-b-2 border-border-light mb-1 gap-1 flex items-baseline justify-center">
                             <span>Cycle</span>
