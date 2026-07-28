@@ -52,8 +52,8 @@ Single VPS running Docker Compose (API + PostgreSQL) behind Nginx, which also se
 
 **Initial setup** (once per server):
 
-    git clone https://github.com/HieuPhan14/FocusBuddy.git
-    cd FocusBuddy
+    git clone https://github.com/HieuPhan14/focusducky.git
+    cd focusducky
     # create root .env (POSTGRES_USER/PASSWORD/DB) and backend/.env — see backend/config.py for required fields
     docker compose up -d --build
     docker compose exec api alembic upgrade head
