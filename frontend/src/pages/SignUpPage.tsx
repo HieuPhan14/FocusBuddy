@@ -175,7 +175,7 @@ const SignUpPage = () => {
                         type="submit"
                         className="btn-primary mt-2"
                         disabled={isLoading}
-                        >Submit
+                        >Create Account
                     </button>
                 </form>
 

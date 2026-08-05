@@ -12,6 +12,7 @@ import Layout from "./components/Layout";
 import TimerProvider from "./context/TimerContext";
 import ThemeProvider from "./context/ThemeContext";
 import AboutPage from "./pages/AboutPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
     return (
@@ -29,6 +30,7 @@ export default function App() {
                                 <Route path="about" element={<AboutPage />}></Route>
                                 <Route path="forgot-password" element={<ForgotPassword />}></Route>
                                 <Route path="reset-password" element={<ResetPassword />}></Route>
+                                <Route path="*" element={<NotFoundPage />}></Route>
                             </Route>
                         </Routes>
                     </AuthProvider>
